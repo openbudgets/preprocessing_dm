@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>preprocessing_dm package &#8212; Data Pre-Processing for Data-Mining 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Data Pre-Processing for Data-Mining 0.1.0 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to preprocessing_dm’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="preprocessing-dm-package">
+<h1>preprocessing_dm package<a class="headerlink" href="#preprocessing-dm-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-preprocessing_dm.send_request">
+<span id="preprocessing-dm-send-request-module"></span><h2>preprocessing_dm.send_request module<a class="headerlink" href="#module-preprocessing_dm.send_request" title="Permalink to this headline">¶</a></h2>
+<p>File name: send_request.py
+Author: Maik Lukasche, Tiansi Dong
+Date created: 9/8/2016
+Date last modified: 9/12/2016
+Python Version: 3.5</p>
+<dl class="class">
+<dt id="preprocessing_dm.send_request.SparqlCEHelper">
+<em class="property">class </em><code class="descclassname">preprocessing_dm.send_request.</code><code class="descname">SparqlCEHelper</code><a class="reference internal" href="_modules/preprocessing_dm/send_request.html#SparqlCEHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.send_request.SparqlCEHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#preprocessing_dm.send_request.SparqlHelper" title="preprocessing_dm.send_request.SparqlHelper"><code class="xref py py-class docutils literal"><span class="pre">preprocessing_dm.send_request.SparqlHelper</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="preprocessing_dm.send_request.SparqlDummyHelper">
+<em class="property">class </em><code class="descclassname">preprocessing_dm.send_request.</code><code class="descname">SparqlDummyHelper</code><a class="reference internal" href="_modules/preprocessing_dm/send_request.html#SparqlDummyHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.send_request.SparqlDummyHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#preprocessing_dm.send_request.SparqlHelper" title="preprocessing_dm.send_request.SparqlHelper"><code class="xref py py-class docutils literal"><span class="pre">preprocessing_dm.send_request.SparqlHelper</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="preprocessing_dm.send_request.SparqlHelper">
+<em class="property">class </em><code class="descclassname">preprocessing_dm.send_request.</code><code class="descname">SparqlHelper</code><a class="reference internal" href="_modules/preprocessing_dm/send_request.html#SparqlHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.send_request.SparqlHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="preprocessing_dm.send_request.SparqlHelper.create_csv_as_file">
+<code class="descname">create_csv_as_file</code><span class="sig-paren">(</span><em>datasets</em>, <em>columns</em>, <em>dict_cols2aggr</em>, <em>path_output_folder</em>, <em>file_name=None</em>, <em>limit=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/send_request.html#SparqlHelper.create_csv_as_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.send_request.SparqlHelper.create_csv_as_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Sparql-Query &amp; sends it to the Sparql-Fhg-endpoint &amp; returning the result as csv file.
+:return: The CSV file path as String for DataMining Input.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="preprocessing_dm.send_request.SparqlHelper.create_csv_as_text">
+<code class="descname">create_csv_as_text</code><span class="sig-paren">(</span><em>datasets</em>, <em>columns</em>, <em>dict_cols2aggr</em>, <em>limit=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/send_request.html#SparqlHelper.create_csv_as_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.send_request.SparqlHelper.create_csv_as_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Sparql-Query &amp; sends it to the Sparql-Fhg-endpoint &amp; returning the result as csv text.
+:return: The CSV Text as String for DataMining Input.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-preprocessing_dm.util">
+<span id="preprocessing-dm-util-module"></span><h2>preprocessing_dm.util module<a class="headerlink" href="#module-preprocessing_dm.util" title="Permalink to this headline">¶</a></h2>
+<p>File name: preprocessing/util.py
+Author: Tiansi Dong, Maik Lukasche
+Date created: 9/14/2016
+Date last modified: 9/14/2016
+Python Version: 3.5</p>
+<dl class="function">
+<dt id="preprocessing_dm.util.ce_from_file_names_query_fuseki_output_csv">
+<code class="descclassname">preprocessing_dm.util.</code><code class="descname">ce_from_file_names_query_fuseki_output_csv</code><span class="sig-paren">(</span><em>filenames</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/util.html#ce_from_file_names_query_fuseki_output_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.util.ce_from_file_names_query_fuseki_output_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>if debug=True, we just use the already exising csv file
+Parameters
+&#8212;&#8212;&#8212;-
+filenames
+debug</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-preprocessing_dm.virtuoso">
+<span id="preprocessing-dm-virtuoso-module"></span><h2>preprocessing_dm.virtuoso module<a class="headerlink" href="#module-preprocessing_dm.virtuoso" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_all_codelists_of_named_graph">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_all_codelists_of_named_graph</code><span class="sig-paren">(</span><em>db</em>, <em>GraphName</em>, <em>use_cache='True'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_all_codelists_of_named_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_all_codelists_of_named_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_all_dataset_of_named_graph">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_all_dataset_of_named_graph</code><span class="sig-paren">(</span><em>db</em>, <em>GraphName</em>, <em>use_cache='True'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_all_dataset_of_named_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_all_dataset_of_named_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_all_names_of_named_graph">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_all_names_of_named_graph</code><span class="sig-paren">(</span><em>db</em>, <em>GraphName</em>, <em>use_cache='True'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_all_names_of_named_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_all_names_of_named_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_dimensions_from_triple_store">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_dimensions_from_triple_store</code><span class="sig-paren">(</span><em>rdfDataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_dimensions_from_triple_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_dimensions_from_triple_store" title="Permalink to this definition">¶</a></dt>
+<dd><p>rdfDataset is the name which is (or from which we can get) the name of dataset at the Fuseki server
+this function returns all dimensions of this dataset, in a list of string form</p>
+<p>rdfDataset: dataset name</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.list_dataset_name">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">list_dataset_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#list_dataset_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.list_dataset_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-preprocessing_dm">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-preprocessing_dm" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">preprocessing_dm package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-preprocessing_dm.send_request">preprocessing_dm.send_request module</a></li>
+<li><a class="reference internal" href="#module-preprocessing_dm.util">preprocessing_dm.util module</a></li>
+<li><a class="reference internal" href="#module-preprocessing_dm.virtuoso">preprocessing_dm.virtuoso module</a></li>
+<li><a class="reference internal" href="#module-preprocessing_dm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to preprocessing_dm&#8217;s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/preprocessing_dm.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Maik, Tiansi.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/preprocessing_dm.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

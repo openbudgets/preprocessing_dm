@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>preprocessing_dm.send_request &#8212; Data Pre-Processing for Data-Mining 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Data Pre-Processing for Data-Mining 0.1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for preprocessing_dm.send_request</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    File name: send_request.py</span>
+<span class="sd">    Author: Maik Lukasche, Tiansi Dong</span>
+<span class="sd">    Date created: 9/8/2016</span>
+<span class="sd">    Date last modified: 9/12/2016</span>
+<span class="sd">    Python Version: 3.5</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+
+<div class="viewcode-block" id="SparqlHelper"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.send_request.SparqlHelper">[docs]</a><span class="k">class</span> <span class="nc">SparqlHelper</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="c1"># Constants:</span>
+    <span class="n">__URL</span> <span class="o">=</span> <span class="s2">&quot;http://eis-openbudgets.iais.fraunhofer.de/virtuoso/sparql&quot;</span>
+    <span class="n">__HEADERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/csv&quot;</span><span class="p">}</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_create_sparql_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">dict_cols2aggr</span><span class="o">=</span><span class="p">{},</span> <span class="n">limit</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Must be implemented by the specific subclass.</span>
+<span class="sd">                This method should return the Sparql-Query which will be send then to the Fhg&#39;s Sparql endpoint.</span>
+<span class="sd">        :param datasets: list of datasets such as [&quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012&gt;&quot;,</span>
+<span class="sd">                          &quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2013&gt;&quot;,</span>
+<span class="sd">                          &quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2014&gt;&quot;]</span>
+<span class="sd">        :param columns: list of columns which ar selected in the SParql-Query such as [&quot;observation&quot;, &quot;amount&quot;, &quot;economicClass&quot;, &quot;adminClass&quot;, &quot;year&quot;, &quot;budgetPhase&quot;]</span>
+<span class="sd">        :param dict_cols2aggr: dictionary containing the mapping from columns to aggregation such as {&quot;observation&quot;: &quot;MIN&quot;, &quot;amount&quot;: &quot;SUM&quot;}</span>
+<span class="sd">        :param limit: number of rows in the Sparql-query result</span>
+<span class="sd">        :return: String containing the Sparql-Query which will be sent to the Sparql endpoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;call to abstract method _create_sparql_query&#39;</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_postprocess_sparql_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sparql_result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Must be implemented by specific subclasses.</span>
+<span class="sd">        This method retrieves the Sparql-result retrieved from the Sparql-endpoint as input and should return the csv-input for the DM-algorithm.</span>
+<span class="sd">        :param sparql_result: query-result in csv format from the Sparql-endpoint</span>
+<span class="sd">        :return: the csv-input for the DM-algorithm</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;call to abstract method _postprocess_sparql_result&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_send_to_sparql_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sparql_query</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">sparql_query</span><span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__URL</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__HEADERS</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+    <span class="k">def</span> <span class="nf">_write_csv_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">path_output_folder</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span> <span class="k">if</span> <span class="n">file_name</span> <span class="k">else</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span> \
+                <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path_output_folder</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;file_path&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">file_path</span>
+
+<div class="viewcode-block" id="SparqlHelper.create_csv_as_text"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.send_request.SparqlHelper.create_csv_as_text">[docs]</a>    <span class="k">def</span> <span class="nf">create_csv_as_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">dict_cols2aggr</span><span class="p">,</span> <span class="n">limit</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a Sparql-Query &amp; sends it to the Sparql-Fhg-endpoint &amp; returning the result as csv text.</span>
+<span class="sd">        :return: The CSV Text as String for DataMining Input.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># (1) Create Sparql-Query: Needs to specified by subclasses</span>
+        <span class="n">sparql_query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_sparql_query</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">dict_cols2aggr</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="c1">#print(&quot;Sparql-Query: %s&quot; % sparql_query)</span>
+        <span class="c1"># (2) Send Sparql-Query to Endpoint:</span>
+        <span class="n">sparql_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_to_sparql_endpoint</span><span class="p">(</span><span class="n">sparql_query</span><span class="p">)</span>
+        <span class="c1">#print(&quot;Sparql-Query-Result: %s&quot; % sparql_result)</span>
+        <span class="c1"># (3) Postprocess Sparql-Query-result: Needs to specified by subclasses</span>
+        <span class="n">csv_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_postprocess_sparql_result</span><span class="p">(</span><span class="n">sparql_result</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CSV-Result length: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">csv_result</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CSV-Result: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">csv_result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">csv_result</span></div>
+
+<div class="viewcode-block" id="SparqlHelper.create_csv_as_file"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.send_request.SparqlHelper.create_csv_as_file">[docs]</a>    <span class="k">def</span> <span class="nf">create_csv_as_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">dict_cols2aggr</span><span class="p">,</span> <span class="n">path_output_folder</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a Sparql-Query &amp; sends it to the Sparql-Fhg-endpoint &amp; returning the result as csv file.</span>
+<span class="sd">        :return: The CSV file path as String for DataMining Input.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">csv_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_csv_as_text</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">dict_cols2aggr</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_csv_to_file</span><span class="p">(</span><span class="n">csv_result</span><span class="p">,</span> <span class="n">path_output_folder</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">file_path</span></div></div>
+
+
+<div class="viewcode-block" id="SparqlDummyHelper"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.send_request.SparqlDummyHelper">[docs]</a><span class="k">class</span> <span class="nc">SparqlDummyHelper</span><span class="p">(</span><span class="n">SparqlHelper</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_create_sparql_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">dict_cols2aggr</span><span class="o">=</span><span class="p">{},</span> <span class="n">limit</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Implemented by subclasses&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_postprocess_sparql_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sparql_result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Implemented by subclasses&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SparqlCEHelper"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.send_request.SparqlCEHelper">[docs]</a><span class="k">class</span> <span class="nc">SparqlCEHelper</span><span class="p">(</span><span class="n">SparqlHelper</span><span class="p">):</span>
+    <span class="n">_DICT_COL_2_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&quot;amount&quot;&#39;</span><span class="p">:</span> <span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;economicClass&quot;&#39;</span><span class="p">:</span> <span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;&quot;adminClass&quot;&#39;</span><span class="p">:</span> <span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;&quot;year&quot;&#39;</span><span class="p">:</span> <span class="s1">&#39;nominal&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;&quot;budgetPhase&quot;&#39;</span><span class="p">:</span> <span class="s1">&#39;nominal&#39;</span><span class="p">}</span>
+
+    <span class="n">_DICT_COL_2_ALIAS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="s1">&#39;amount2&#39;</span><span class="p">}</span>
+
+    <span class="n">_DICT_COL_2_MODEL</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="s1">&#39;?observation obeu-measure:amount ?amount2 .&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="s1">&#39;?observation qb:dataSet/obeu-dimension:fiscalYear ?year .&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;budgetPhase&#39;</span><span class="p">:</span> <span class="s1">&#39;?observation gr-dimension:budgetPhase ?budgetPhase .&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;observation&#39;</span><span class="p">:</span> <span class="s1">&#39;?slice qb:observation ?observation .&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;economicClass&#39;</span><span class="p">:</span> <span class="s1">&#39;?slice ?economicClassification ?economicClass . filter(contains(str(?economicClassification), &quot;economicClassification&quot;)) .&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;adminClass&#39;</span><span class="p">:</span> <span class="s1">&#39;?slice ?administrativeClassification ?adminClass . filter(contains(str(?administrativeClassification), &quot;administrativeClassification&quot;))&#39;</span>
+                         <span class="c1">#&#39;economicClass&#39;: &#39;?slice gr-dimension:economicClassification ?economicClass .&#39;,</span>
+                         <span class="c1">#&#39;adminClass&#39;: &#39;?slice gr-dimension:administrativeClassification ?adminClass .&#39;</span>
+                         <span class="p">}</span>
+
+    <span class="n">_DICT_COL_2_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;observation&#39;</span><span class="p">:</span> <span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span> <span class="s1">&#39;amount&#39;</span><span class="p">,</span> <span class="s1">&#39;economicClass&#39;</span><span class="p">:</span> <span class="s1">&#39;economicClass&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;adminClass&#39;</span><span class="p">:</span> <span class="s1">&#39;adminClass&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;budgetPhase&#39;</span><span class="p">:</span> <span class="s1">&#39;budgetPhase&#39;</span><span class="p">}</span>
+
+    <span class="n">_PREFIXES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;PREFIX obeu-measure:     &lt;http://data.openbudgets.eu/ontology/dsd/measure/&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PREFIX obeu-dimension:   &lt;http://data.openbudgets.eu/ontology/dsd/dimension/&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PREFIX qb:               &lt;http://purl.org/linked-data/cube#&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PREFIX rdfs:             &lt;http://www.w3.org/2000/01/rdf-schema#&gt;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PREFIX gr-dimension: &lt;http://data.openbudgets.eu/ontology/dsd/greek-municipalities/dimension/&gt;&quot;</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_create_sparql_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">dict_cols2aggr</span><span class="o">=</span><span class="p">{},</span> <span class="n">limit</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Subclass implementation for Christiane&#39;s outlier detection algorithm.</span>
+<span class="sd">        :param datasets:</span>
+<span class="sd">        :param columns:</span>
+<span class="sd">        :param dict_cols2aggr:</span>
+<span class="sd">        :param limit:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">SparqlCEHelper</span><span class="o">.</span><span class="n">_PREFIXES</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SELECT&quot;</span>
+        <span class="c1"># columns:</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="n">aggregation</span> <span class="o">=</span> <span class="n">dict_cols2aggr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">aggregation</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">(</span><span class="si">%s</span><span class="s2">(?</span><span class="si">%s</span><span class="s2">) AS ?</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">aggregation</span><span class="p">,</span> <span class="n">SparqlCEHelper</span><span class="o">.</span><span class="n">_DICT_COL_2_ALIAS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">col</span><span class="p">),</span>
+                                                  <span class="n">SparqlCEHelper</span><span class="o">.</span><span class="n">_DICT_COL_2_NAMES</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">?</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">col</span>
+        <span class="c1"># datsets:</span>
+        <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FROM </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">dataset</span>
+        <span class="c1"># where-clause:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">WHERE { </span><span class="si">%s</span><span class="s2"> }&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">SparqlCEHelper</span><span class="o">.</span><span class="n">_DICT_COL_2_MODEL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">])</span>
+        <span class="c1"># groupBy-clause:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">GROUP BY </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;?</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dict_cols2aggr</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+        <span class="k">if</span> <span class="n">limit</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LIMIT &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_postprocess_sparql_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sparql_result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Subclass implementation for Christiane&#39;s outlier detection algorithm.</span>
+<span class="sd">        Adds an additional line for identifiers to the sparql-result for Christiane&#39;s outier detection algorithm.</span>
+
+<span class="sd">            :param sparql_result: Sparql-result in csv-format</span>
+<span class="sd">            :return: str</span>
+<span class="sd">                the input for Christianes outlier detection algorithm</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                todo</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">csv_lines</span> <span class="o">=</span> <span class="n">sparql_result</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">csv_lines</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">SparqlCEHelper</span><span class="o">.</span><span class="n">_create_type_mapping_line</span><span class="p">(</span><span class="n">sparql_result</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">csv_lines</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_create_type_mapping_line</span><span class="p">(</span><span class="n">csv_text</span><span class="p">):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">csv_text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">header_items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">header_items</span><span class="p">)</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="n">SparqlCEHelper</span><span class="o">.</span><span class="n">_DICT_COL_2_TYPES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">header_items</span><span class="p">]</span>
+        <span class="k">return</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">types</span><span class="p">)</span></div>
+
+
+<span class="c1"># Tests:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Parameters:</span>
+    <span class="n">input_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;observation&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="s2">&quot;economicClass&quot;</span><span class="p">,</span> <span class="s2">&quot;adminClass&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;budgetPhase&quot;</span><span class="p">]</span>
+    <span class="n">input_dict_cols2aggr</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="s2">&quot;MIN&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;SUM&quot;</span><span class="p">}</span>
+    <span class="n">input_datasets</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012&gt;&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2013&gt;&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2014&gt;&quot;</span><span class="p">]</span>
+    <span class="n">sparql_helper_ce</span> <span class="o">=</span> <span class="n">SparqlCEHelper</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sparql_helper_ce</span><span class="o">.</span><span class="n">create_csv_as_text</span><span class="p">(</span><span class="n">input_datasets</span><span class="p">,</span> <span class="n">input_cols</span><span class="p">,</span> <span class="n">input_dict_cols2aggr</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
+    <span class="c1"># print(create_csv_for_outlier_text(input_datasets, input_cols, input_dict_cols2aggr))</span>
+    <span class="c1"># print(sparql_helper_ce.create_csv_as_file(input_datasets, input_cols, input_dict_cols2aggr,</span>
+    <span class="c1">#                                                 os.path.expanduser(&quot;~&quot;), limit=1))</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Maik, Tiansi.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
