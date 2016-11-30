@@ -9,7 +9,7 @@ import os
 from .send_request import SparqlCEHelper
 
 
-def ce_from_file_names_query_fuseki_output_csv(filenames, debug=False):
+def ce_from_file_names_query_fuseki_output_csv(filenames, current_path, debug=False):
     """
     if debug=True, we just use the already exising csv file
     Parameters
@@ -22,7 +22,7 @@ def ce_from_file_names_query_fuseki_output_csv(filenames, debug=False):
 
     """
     if debug:
-        dataPath = os.path.join(os.path.abspath(os.path.dirname(__file__) +'..'), 'data')
+        dataPath = os.path.join(os.path.abspath(current_path +'..'), 'data')
         if os.path.isdir(dataPath):
             csvFile = os.path.join(dataPath, 'Kilkis_neu.csv')
             print(csvFile)
@@ -36,7 +36,7 @@ def ce_from_file_names_query_fuseki_output_csv(filenames, debug=False):
         input_dict_cols2aggr = {"observation": "MIN", "amount": "SUM"}
         input_datasets = ["<http://data.openbudgets.eu/resource/dataset/"+fn+">" for fn in fileNamesLst]
 
-        path_output_folder = os.path.join(os.path.abspath(os.path.dirname(__file__) +'../../..'), 'Data')
+        path_output_folder = os.path.join(os.path.abspath(current_path +'..'), 'data')
         SparqlHelperCE = SparqlCEHelper()
         csvFile = SparqlHelperCE.create_csv_as_file(input_datasets, input_cols,
                                                     input_dict_cols2aggr, path_output_folder, limit=10000)
