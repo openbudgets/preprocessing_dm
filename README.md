@@ -37,4 +37,3 @@ Out[2]:
  'budget-athens-revenue-2004__220e3',
  ...
  ]
- ```
