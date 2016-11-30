@@ -22,7 +22,7 @@ def ce_from_file_names_query_fuseki_output_csv(filenames, debug=False):
 
     """
     if debug:
-        dataPath = os.path.join(os.path.abspath(os.path.dirname(__file__) +'../../..'), 'Data')
+        dataPath = os.path.join(os.path.abspath(os.path.dirname(__file__) +'..'), 'data')
         if os.path.isdir(dataPath):
             csvFile = os.path.join(dataPath, 'Kilkis_neu.csv')
             print(csvFile)
