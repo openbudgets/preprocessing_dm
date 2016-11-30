@@ -5,8 +5,7 @@ A Python module for data pre-processing of data-mining tasks
 ```
 $ git clone https://github.com/openbudgets/preprocessing_dm.git
 $ cd preprocessing_dm
-preprocessing_dm $ source venv/bin/activate
-(venv) okfgr_dm $ pip3 install .
+preprocessing_dm $ make init
 ```
 
 # Run test
