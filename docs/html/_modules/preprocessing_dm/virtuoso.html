@@ -62,8 +62,22 @@
 
 
 <span class="c1">###</span>
+<span class="c1">#  query virtuoso</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="query_virtuoso"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.query_virtuoso">[docs]</a><span class="k">def</span> <span class="nf">query_virtuoso</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    send SPARQL string sqlStr to virtuoso server, and return result in json format</span>
+<span class="sd">    :param sqlStr:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sparql</span><span class="o">.</span><span class="n">setQuery</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="n">sparql</span><span class="o">.</span><span class="n">setReturnFormat</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sparql</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span></div>
+<span class="c1">#</span>
 <span class="c1">#  List all names of named-graphs</span>
 <span class="c1">###</span>
+
+
 <div class="viewcode-block" id="get_all_names_of_named_graph"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_all_names_of_named_graph">[docs]</a><span class="k">def</span> <span class="nf">get_all_names_of_named_graph</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">GraphName</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="s1">&#39;True&#39;</span><span class="p">):</span>
     <span class="n">nlst</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -132,26 +146,103 @@
 <span class="c1">#  list content of a named graph</span>
 <span class="c1">##</span>
 
-
-<div class="viewcode-block" id="get_dimensions_from_triple_store"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_dimensions_from_triple_store">[docs]</a><span class="k">def</span> <span class="nf">get_dimensions_from_triple_store</span><span class="p">(</span><span class="n">rdfDataset</span><span class="p">):</span>
+<div class="viewcode-block" id="get_dimensions_from_rdfrecord"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_dimensions_from_rdfrecord">[docs]</a><span class="k">def</span> <span class="nf">get_dimensions_from_rdfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    rdfDataset is the name which is (or from which we can get) the name of dataset at the Fuseki server</span>
-<span class="sd">    this function returns all dimensions of this dataset, in a list of string form</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    rdfDataset: dataset name</span>
-
-<span class="sd">    Returns: a list of string</span>
-<span class="sd">    -------</span>
-
+<span class="sd">    get all dimensions *used* in Slice or Observation</span>
+<span class="sd">    :param dataset:</span>
+<span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dataSetName</span> <span class="o">=</span> <span class="n">rdfDataset</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;fuseki-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">graphName</span> <span class="o">=</span> <span class="s2">&quot;http://data.openbudgets.eu/resource/datasets/&quot;</span> <span class="o">+</span> <span class="n">dataSetName</span>
-    <span class="n">qstr_d</span> <span class="o">=</span> <span class="s2">&quot;select distinct ?s from &quot;</span> <span class="o">+</span> <span class="n">graphName</span> <span class="o">+</span> <span class="s2">&quot;  where {?s ?p ?o . filter (contains(str(?s), &#39;dimension&#39;))  }&quot;</span>
-    <span class="c1"># call curl fuseki func</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sample_dimension1&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_dimension2&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_dimension3&#39;</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+    <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">record</span> <span class="o">==</span> <span class="s1">&#39;Slice&#39;</span><span class="p">:</span>
+        <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;PREFIX qb:  &lt;http://purl.org/linked-data/cube#&gt; SELECT ?p FROM </span><span class="si">{}</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">        WHERE {{?s a qb:Slice; ?p ?o .filter(contains(str(?p), &#39;dimension&#39;)).}} group by ?p&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">record</span> <span class="o">==</span> <span class="s1">&#39;Observation&#39;</span><span class="p">:</span>
+        <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;PREFIX qb:  &lt;http://purl.org/linked-data/cube#&gt; SELECT ?p FROM </span><span class="si">{}</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">        WHERE {{?s a qb:Observation; ?p ?o .filter(contains(str(?p), &#39;dimension&#39;)).}} group by ?p&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">record</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;SELECT ?p FROM </span><span class="si">{}</span><span class="s2"> WHERE {{?s ?p ?o . filter(contains(str(?p), &#39;dimension&#39;))}}  group by ?p&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">query_virtuoso</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="s1">&#39;bindings&#39;</span><span class="p">]:</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">lst</span></div>
+
+
+<div class="viewcode-block" id="get_dimensions_from_dataset"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_dimensions_from_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_dimensions_from_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get all dimensions *used* in an RDF dataset</span>
+<span class="sd">    :param dataset:</span>
+<span class="sd">    :return: a list of all dimensions used for observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_dimensions_from_rdfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_dimensions_of_observation"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_dimensions_of_observation">[docs]</a><span class="k">def</span> <span class="nf">get_dimensions_of_observation</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get all dimensions *used* in observation</span>
+<span class="sd">    :param dataset:</span>
+<span class="sd">    :return: a list of all dimensions used for observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_dimensions_from_rdfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="s1">&#39;Observation&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_dimensions_of_slice"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_dimensions_of_slice">[docs]</a><span class="k">def</span> <span class="nf">get_dimensions_of_slice</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get all dimensions *used* in slice</span>
+<span class="sd">    :param dataset:</span>
+<span class="sd">    :return: a list of all dimensions used for observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_dimensions_from_rdfrecord</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="s1">&#39;Slice&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_slice_function"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_slice_function">[docs]</a><span class="k">def</span> <span class="nf">get_slice_function</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get the function of slice</span>
+<span class="sd">    :param dataset:</span>
+<span class="sd">    :return: function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;PREFIX qb:  &lt;http://purl.org/linked-data/cube#&gt; SELECT ?o FROM </span><span class="si">{}</span><span class="se">\</span>
+<span class="s2">     WHERE {{?s qb:sliceStructure ?o}}  group by ?o&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">query_virtuoso</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="s1">&#39;bindings&#39;</span><span class="p">]:</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">lst</span></div>
+
+
+<div class="viewcode-block" id="get_all_observations_from_sliced_dataset"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_all_observations_from_sliced_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_all_observations_from_sliced_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param dataset:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;PREFIX qb:  &lt;http://purl.org/linked-data/cube#&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">sqlStr</span> <span class="o">+=</span> <span class="s2">&quot;PREFIX obeu-measure: &lt;http://data.openbudgets.eu/ontology/dsd/measure/&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">whereClause</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">whereSliceFunction</span> <span class="o">=</span> <span class="s2">&quot;?s qb:sliceStructure ?sfunc .</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">selectClause</span> <span class="o">=</span> <span class="s2">&quot;?s ?sfunc ?amount&quot;</span>
+    <span class="n">dimensionInSlice</span> <span class="o">=</span> <span class="n">get_dimensions_of_slice</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">dimensionInObservation</span> <span class="o">=</span> <span class="n">get_dimensions_of_observation</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+    <span class="n">whereSliceDimension</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensionInSlice</span><span class="p">)):</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="n">dimensionInSlice</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">whereSliceDimension</span> <span class="o">+=</span> <span class="s2">&quot;?s &lt;</span><span class="si">{0}</span><span class="s2">&gt; ?</span><span class="si">{1}</span><span class="s2"> . </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimensionInSlice</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">selectClause</span> <span class="o">+=</span> <span class="s2">&quot; ?</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+
+    <span class="n">obsrevationClause</span> <span class="o">=</span> <span class="s2">&quot;?s qb:observation ?observation .</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">selectClause</span> <span class="o">+=</span> <span class="s2">&quot; ?observation&quot;</span>
+    <span class="n">whereObservationDimension</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensionInObservation</span><span class="p">)):</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="n">dimensionInObservation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">whereObservationDimension</span> <span class="o">+=</span> <span class="s2">&quot;?observation &lt;</span><span class="si">{0}</span><span class="s2">&gt; ?</span><span class="si">{1}</span><span class="s2"> . </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimensionInObservation</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">selectClause</span> <span class="o">+=</span> <span class="s2">&quot; ?</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="n">whereClause</span> <span class="o">+=</span> <span class="s2">&quot; ?observation obeu-measure:amount ?amount . </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">whereClause</span> <span class="o">+=</span> <span class="n">whereSliceFunction</span> <span class="o">+</span> <span class="n">whereSliceDimension</span> <span class="o">+</span> <span class="n">obsrevationClause</span> <span class="o">+</span> <span class="n">whereObservationDimension</span>
+    <span class="n">sqlStr</span> <span class="o">+=</span> <span class="s2">&quot;Select </span><span class="si">{0}</span><span class="se">\n</span><span class="s2"> From </span><span class="si">{1}</span><span class="se">\n</span><span class="s2"> WHERE {{ </span><span class="si">{2}</span><span class="s2"> }}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">selectClause</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">whereClause</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">query_virtuoso</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="s1">&#39;bindings&#39;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="list_dataset_name"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.list_dataset_name">[docs]</a><span class="k">def</span> <span class="nf">list_dataset_name</span><span class="p">():</span>
@@ -162,6 +253,17 @@
         <span class="k">return</span> <span class="p">[</span> <span class="n">dataset_name</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">dataset_name</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;not found!&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="check_dataset_use_slice"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.check_dataset_use_slice">[docs]</a><span class="k">def</span> <span class="nf">check_dataset_use_slice</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    check whether a dataset uses &#39;qb:Slice&#39;</span>
+<span class="sd">    :param dataset:  dataset name</span>
+<span class="sd">    :return: true if it uses qb:Slice, otherwise, return false</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;PREFIX qb:  &lt;http://purl.org/linked-data/cube#&gt;  ASK FROM </span><span class="si">{}</span><span class="s2"> WHERE {{ ?s a qb:Slice . }} &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">query_virtuoso</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;boolean&#39;</span><span class="p">]</span></div>
 </pre></div>
 
           </div>

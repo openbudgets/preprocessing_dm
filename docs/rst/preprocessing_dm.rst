@@ -4,6 +4,14 @@ preprocessing_dm package
 Submodules
 ----------
 
+preprocessing_dm.core module
+----------------------------
+
+.. automodule:: preprocessing_dm.core
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 preprocessing_dm.send_request module
 ------------------------------------
 

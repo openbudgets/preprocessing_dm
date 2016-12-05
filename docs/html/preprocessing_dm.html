@@ -47,6 +47,25 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-preprocessing_dm.core">
+<span id="preprocessing-dm-core-module"></span><h2>preprocessing_dm.core module<a class="headerlink" href="#module-preprocessing_dm.core" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="preprocessing_dm.core.get_csv_table_from_dataset">
+<code class="descclassname">preprocessing_dm.core.</code><code class="descname">get_csv_table_from_dataset</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/core.html#get_csv_table_from_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.core.get_csv_table_from_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a table from an rdf dataset
+:param dataset: an RDF datasetname
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.core.get_datasets_use_slice">
+<code class="descclassname">preprocessing_dm.core.</code><code class="descname">get_datasets_use_slice</code><span class="sig-paren">(</span><em>datasetList</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/core.html#get_datasets_use_slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.core.get_datasets_use_slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>check which dataset uses &#8216;qb:Slice&#8217;
+:param datasetList: a list of dataset names
+:return: the list of datasets which use &#8216;qb:Slice&#8217;</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-preprocessing_dm.send_request">
 <span id="preprocessing-dm-send-request-module"></span><h2>preprocessing_dm.send_request module<a class="headerlink" href="#module-preprocessing_dm.send_request" title="Permalink to this headline">¶</a></h2>
 <p>File name: send_request.py
@@ -96,7 +115,7 @@ Date last modified: 9/14/2016
 Python Version: 3.5</p>
 <dl class="function">
 <dt id="preprocessing_dm.util.ce_from_file_names_query_fuseki_output_csv">
-<code class="descclassname">preprocessing_dm.util.</code><code class="descname">ce_from_file_names_query_fuseki_output_csv</code><span class="sig-paren">(</span><em>filenames</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/util.html#ce_from_file_names_query_fuseki_output_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.util.ce_from_file_names_query_fuseki_output_csv" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">preprocessing_dm.util.</code><code class="descname">ce_from_file_names_query_fuseki_output_csv</code><span class="sig-paren">(</span><em>filenames</em>, <em>dataPath</em>, <em>debug=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/util.html#ce_from_file_names_query_fuseki_output_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.util.ce_from_file_names_query_fuseki_output_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>if debug=True, we just use the already exising csv file
 Parameters
 &#8212;&#8212;&#8212;-
@@ -107,6 +126,14 @@ debug</p>
 </div>
 <div class="section" id="module-preprocessing_dm.virtuoso">
 <span id="preprocessing-dm-virtuoso-module"></span><h2>preprocessing_dm.virtuoso module<a class="headerlink" href="#module-preprocessing_dm.virtuoso" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.check_dataset_use_slice">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">check_dataset_use_slice</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#check_dataset_use_slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.check_dataset_use_slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>check whether a dataset uses &#8216;qb:Slice&#8217;
+:param dataset:  dataset name
+:return: true if it uses qb:Slice, otherwise, return false</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="preprocessing_dm.virtuoso.get_all_codelists_of_named_graph">
 <code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_all_codelists_of_named_graph</code><span class="sig-paren">(</span><em>db</em>, <em>GraphName</em>, <em>use_cache='True'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_all_codelists_of_named_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_all_codelists_of_named_graph" title="Permalink to this definition">¶</a></dt>
@@ -123,17 +150,72 @@ debug</p>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="preprocessing_dm.virtuoso.get_dimensions_from_triple_store">
-<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_dimensions_from_triple_store</code><span class="sig-paren">(</span><em>rdfDataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_dimensions_from_triple_store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_dimensions_from_triple_store" title="Permalink to this definition">¶</a></dt>
-<dd><p>rdfDataset is the name which is (or from which we can get) the name of dataset at the Fuseki server
-this function returns all dimensions of this dataset, in a list of string form</p>
-<p>rdfDataset: dataset name</p>
+<dt id="preprocessing_dm.virtuoso.get_all_observations_from_sliced_dataset">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_all_observations_from_sliced_dataset</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_all_observations_from_sliced_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_all_observations_from_sliced_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dataset</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_dimensions_from_dataset">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_dimensions_from_dataset</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_dimensions_from_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_dimensions_from_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all dimensions <em>used</em> in an RDF dataset
+:param dataset:
+:return: a list of all dimensions used for observations</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_dimensions_from_rdfrecord">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_dimensions_from_rdfrecord</code><span class="sig-paren">(</span><em>dataset</em>, <em>record=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_dimensions_from_rdfrecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_dimensions_from_rdfrecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all dimensions <em>used</em> in Slice or Observation
+:param dataset:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_dimensions_of_observation">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_dimensions_of_observation</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_dimensions_of_observation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_dimensions_of_observation" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all dimensions <em>used</em> in observation
+:param dataset:
+:return: a list of all dimensions used for observations</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_dimensions_of_slice">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_dimensions_of_slice</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_dimensions_of_slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_dimensions_of_slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all dimensions <em>used</em> in slice
+:param dataset:
+:return: a list of all dimensions used for observations</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.get_slice_function">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">get_slice_function</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#get_slice_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.get_slice_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the function of slice
+:param dataset:
+:return: function</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="preprocessing_dm.virtuoso.list_dataset_name">
 <code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">list_dataset_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#list_dataset_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.list_dataset_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.virtuoso.query_virtuoso">
+<code class="descclassname">preprocessing_dm.virtuoso.</code><code class="descname">query_virtuoso</code><span class="sig-paren">(</span><em>sqlStr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/virtuoso.html#query_virtuoso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.virtuoso.query_virtuoso" title="Permalink to this definition">¶</a></dt>
+<dd><p>send SPARQL string sqlStr to virtuoso server, and return result in json format
+:param sqlStr:
+:return:</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-preprocessing_dm">
@@ -151,6 +233,7 @@ this function returns all dimensions of this dataset, in a list of string form</
   <ul>
 <li><a class="reference internal" href="#">preprocessing_dm package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-preprocessing_dm.core">preprocessing_dm.core module</a></li>
 <li><a class="reference internal" href="#module-preprocessing_dm.send_request">preprocessing_dm.send_request module</a></li>
 <li><a class="reference internal" href="#module-preprocessing_dm.util">preprocessing_dm.util module</a></li>
 <li><a class="reference internal" href="#module-preprocessing_dm.virtuoso">preprocessing_dm.virtuoso module</a></li>

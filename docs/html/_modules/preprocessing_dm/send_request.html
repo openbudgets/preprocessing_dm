@@ -56,6 +56,54 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Sample SPARQL query</span>
+
+<span class="sd">PREFIX obeu-measure:     &lt;http://data.openbudgets.eu/ontology/dsd/measure/&gt;</span>
+<span class="sd">PREFIX obeu-dimension:   &lt;http://data.openbudgets.eu/ontology/dsd/dimension/&gt;</span>
+<span class="sd">PREFIX qb:               &lt;http://purl.org/linked-data/cube#&gt;</span>
+<span class="sd">PREFIX rdfs:             &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
+<span class="sd">PREFIX gr-dimension: &lt;http://data.openbudgets.eu/ontology/dsd/greek-municipalities/dimension/&gt;</span>
+<span class="sd">SELECT</span>
+<span class="sd">(MIN(?observation) AS ?ID)</span>
+<span class="sd">(SUM(?amount2) AS ?amount)</span>
+<span class="sd">?economicClass</span>
+<span class="sd">?adminClass</span>
+<span class="sd">?year</span>
+<span class="sd">?budgetPhase</span>
+<span class="sd">FROM &lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012&gt;</span>
+<span class="sd">FROM &lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2013&gt;</span>
+<span class="sd">WHERE { ?slice qb:observation ?observation .</span>
+<span class="sd">?observation obeu-measure:amount ?amount2 .</span>
+<span class="sd">?slice gr-dimension:economicClassification ?economicClass .</span>
+<span class="sd">?slice gr-dimension:administrativeClassification ?adminClass .</span>
+<span class="sd">?observation qb:dataSet/obeu-dimension:fiscalYear ?year .</span>
+<span class="sd">?observation gr-dimension:budgetPhase ?budgetPhase . }</span>
+<span class="sd">GROUP BY ?economicClass ?adminClass ?year ?budgetPhase</span>
+<span class="sd">LIMIT 10000</span>
+
+<span class="sd">PREFIX gr-dimension: &lt;http://data.openbudgets.eu/ontology/dsd/greek-municipalities/dimension/&gt;</span>
+<span class="sd">SELECT</span>
+<span class="sd">(MIN(?observation) AS ?ID)</span>
+<span class="sd">(SUM(?amount2) AS ?amount)</span>
+<span class="sd">?economicClass</span>
+<span class="sd">?adminClass</span>
+<span class="sd">?year</span>
+<span class="sd">?budgetPhase</span>
+<span class="sd">FROM &lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012&gt;</span>
+<span class="sd">FROM &lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2013&gt;</span>
+<span class="sd">WHERE { ?slice qb:observation ?observation .</span>
+<span class="sd">?observation obeu-measure:amount ?amount2 .</span>
+<span class="sd">?slice ?economicClassification ?economicClass . filter(contains(str(?economicClassification), &quot;economicClassification&quot;)) .</span>
+<span class="sd">?slice ?administrativeClassification ?adminClass . filter(contains(str(?administrativeClassification), &quot;administrativeClassification&quot;))</span>
+<span class="sd">?observation qb:dataSet/obeu-dimension:fiscalYear ?year .</span>
+<span class="sd">?observation gr-dimension:budgetPhase ?budgetPhase . }</span>
+<span class="sd">GROUP BY ?economicClass ?adminClass ?year ?budgetPhase</span>
+<span class="sd">LIMIT 10000</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SparqlHelper"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.send_request.SparqlHelper">[docs]</a><span class="k">class</span> <span class="nc">SparqlHelper</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
     <span class="c1"># Constants:</span>
