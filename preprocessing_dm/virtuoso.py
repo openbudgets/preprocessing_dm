@@ -17,8 +17,22 @@ sparql = SPARQLWrapper(SPARQLEndPoint)
 
 
 ###
+#  query virtuoso
+#
+def query_virtuoso(sqlStr):
+    """
+    send SPARQL string sqlStr to virtuoso server, and return result in json format
+    :param sqlStr:
+    :return:
+    """
+    sparql.setQuery(sqlStr)
+    sparql.setReturnFormat(JSON)
+    return sparql.query().convert()
+#
 #  List all names of named-graphs
 ###
+
+
 def get_all_names_of_named_graph(db, GraphName, use_cache='True'):
     nlst = []
     names = ""
@@ -87,26 +101,103 @@ def get_all_dataset_of_named_graph(db, GraphName, use_cache='True'):
 #  list content of a named graph
 ##
 
-
-def get_dimensions_from_triple_store(rdfDataset):
+def get_dimensions_from_rdfrecord(dataset, record=''):
     """
-    rdfDataset is the name which is (or from which we can get) the name of dataset at the Fuseki server
-    this function returns all dimensions of this dataset, in a list of string form
-
-    Parameters
-    ----------
-    rdfDataset: dataset name
-
-    Returns: a list of string
-    -------
-
+    get all dimensions *used* in Slice or Observation
+    :param dataset:
+    :return:
     """
-    dataSetName = rdfDataset.replace("fuseki-", "")
-    graphName = "http://data.openbudgets.eu/resource/datasets/" + dataSetName
-    qstr_d = "select distinct ?s from " + graphName + "  where {?s ?p ?o . filter (contains(str(?s), 'dimension'))  }"
-    # call curl fuseki func
-    result = ['sample_dimension1', 'sample_dimension2', 'sample_dimension3']
-    return result
+    sqlStr = ""
+    if record == 'Slice':
+        sqlStr = "PREFIX qb:  <http://purl.org/linked-data/cube#> SELECT ?p FROM {} \
+        WHERE {{?s a qb:Slice; ?p ?o .filter(contains(str(?p), 'dimension')).}} group by ?p".format(dataset)
+    elif record == 'Observation':
+        sqlStr = "PREFIX qb:  <http://purl.org/linked-data/cube#> SELECT ?p FROM {} \
+        WHERE {{?s a qb:Observation; ?p ?o .filter(contains(str(?p), 'dimension')).}} group by ?p".format(dataset)
+    elif record == '':
+        sqlStr = "SELECT ?p FROM {} WHERE {{?s ?p ?o . filter(contains(str(?p), 'dimension'))}}  group by ?p".format(dataset)
+    result = query_virtuoso(sqlStr)
+    lst = []
+    for record in result['results']['bindings']:
+        lst.append(record['p']['value'])
+    return lst
+
+
+def get_dimensions_from_dataset(dataset):
+    """
+    get all dimensions *used* in an RDF dataset
+    :param dataset:
+    :return: a list of all dimensions used for observations
+    """
+    return get_dimensions_from_rdfrecord(dataset, record='')
+
+
+def get_dimensions_of_observation(dataset):
+    """
+    get all dimensions *used* in observation
+    :param dataset:
+    :return: a list of all dimensions used for observations
+    """
+    return get_dimensions_from_rdfrecord(dataset, record='Observation')
+
+
+def get_dimensions_of_slice(dataset):
+    """
+    get all dimensions *used* in slice
+    :param dataset:
+    :return: a list of all dimensions used for observations
+    """
+    return get_dimensions_from_rdfrecord(dataset, record='Slice')
+
+
+def get_slice_function(dataset):
+    """
+    get the function of slice
+    :param dataset:
+    :return: function
+    """
+    sqlStr = ""
+    sqlStr = "PREFIX qb:  <http://purl.org/linked-data/cube#> SELECT ?o FROM {}\
+     WHERE {{?s qb:sliceStructure ?o}}  group by ?o".format(dataset)
+    result = query_virtuoso(sqlStr)
+    lst = []
+    for record in result['results']['bindings']:
+        lst.append(record['o']['value'])
+    return lst
+
+
+def get_all_observations_from_sliced_dataset(dataset):
+    """
+    :param dataset:
+    :return:
+    """
+    sqlStr = "PREFIX qb:  <http://purl.org/linked-data/cube#>\n"
+    sqlStr += "PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>\n"
+    whereClause = ""
+    whereSliceFunction = "?s qb:sliceStructure ?sfunc .\n"
+    selectClause = "?s ?sfunc ?amount"
+    dimensionInSlice = get_dimensions_of_slice(dataset)
+    dimensionInObservation = get_dimensions_of_observation(dataset)
+
+    whereSliceDimension = ""
+    for i in range(len(dimensionInSlice)):
+        column = dimensionInSlice[i].split('/')[-1]
+        whereSliceDimension += "?s <{0}> ?{1} . \n".format(dimensionInSlice[i], column)
+        selectClause += " ?{0}".format(column)
+
+    obsrevationClause = "?s qb:observation ?observation .\n"
+    selectClause += " ?observation"
+    whereObservationDimension = ""
+    for i in range(len(dimensionInObservation)):
+        column = dimensionInObservation[i].split('/')[-1]
+        whereObservationDimension += "?observation <{0}> ?{1} . \n".format(dimensionInObservation[i], column)
+        selectClause += " ?{0}".format(column)
+    whereClause += " ?observation obeu-measure:amount ?amount . \n"
+    whereClause += whereSliceFunction + whereSliceDimension + obsrevationClause + whereObservationDimension
+    sqlStr += "Select {0}\n From {1}\n WHERE {{ {2} }}".format(selectClause, dataset, whereClause)
+    print(sqlStr)
+    result = query_virtuoso(sqlStr)
+    return result['results']['bindings']
 
 
 def list_dataset_name():
@@ -117,3 +208,14 @@ def list_dataset_name():
         return [ dataset_name['name'] for dataset_name in dic['data']]
     else:
         return ['not found!']
+
+
+def check_dataset_use_slice(dataset):
+    """
+    check whether a dataset uses 'qb:Slice'
+    :param dataset:  dataset name
+    :return: true if it uses qb:Slice, otherwise, return false
+    """
+    sqlStr = "PREFIX qb:  <http://purl.org/linked-data/cube#>  ASK FROM {} WHERE {{ ?s a qb:Slice . }} ".format(dataset)
+    result = query_virtuoso(sqlStr)
+    return result['boolean']

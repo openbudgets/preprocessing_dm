@@ -9,6 +9,7 @@ import unittest
 class DataPreprocessingForOutlierDetectionLOF(unittest.TestCase):
     """Basic test cases."""
 
+    @unittest.skip("testing skipping")
     def test_create_csv_for_LOF(self):
         input_cols = ["observation", "amount", "economicClass", "adminClass", "year", "budgetPhase"]
         input_dict_cols2aggr = {"observation": "MIN", "amount": "SUM"}
@@ -20,11 +21,11 @@ class DataPreprocessingForOutlierDetectionLOF(unittest.TestCase):
         assert len(txt) > 0
         assert type(txt) == str
 
+    @unittest.skip("testing skipping")
     def test_list_dataset_name(self):
         datasetNames = preprocessing_dm.list_dataset_name()
         print('totally ', len(datasetNames), ' data names')
         assert len(datasetNames) > 212
-
 
 
 if __name__ == '__main__':

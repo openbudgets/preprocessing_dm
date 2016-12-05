@@ -11,6 +11,54 @@ import datetime
 import os
 from abc import ABCMeta, abstractmethod
 
+"""
+Sample SPARQL query
+
+PREFIX obeu-measure:     <http://data.openbudgets.eu/ontology/dsd/measure/>
+PREFIX obeu-dimension:   <http://data.openbudgets.eu/ontology/dsd/dimension/>
+PREFIX qb:               <http://purl.org/linked-data/cube#>
+PREFIX rdfs:             <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX gr-dimension: <http://data.openbudgets.eu/ontology/dsd/greek-municipalities/dimension/>
+SELECT
+(MIN(?observation) AS ?ID)
+(SUM(?amount2) AS ?amount)
+?economicClass
+?adminClass
+?year
+?budgetPhase
+FROM <http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012>
+FROM <http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2013>
+WHERE { ?slice qb:observation ?observation .
+?observation obeu-measure:amount ?amount2 .
+?slice gr-dimension:economicClassification ?economicClass .
+?slice gr-dimension:administrativeClassification ?adminClass .
+?observation qb:dataSet/obeu-dimension:fiscalYear ?year .
+?observation gr-dimension:budgetPhase ?budgetPhase . }
+GROUP BY ?economicClass ?adminClass ?year ?budgetPhase
+LIMIT 10000
+
+PREFIX gr-dimension: <http://data.openbudgets.eu/ontology/dsd/greek-municipalities/dimension/>
+SELECT
+(MIN(?observation) AS ?ID)
+(SUM(?amount2) AS ?amount)
+?economicClass
+?adminClass
+?year
+?budgetPhase
+FROM <http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012>
+FROM <http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2013>
+WHERE { ?slice qb:observation ?observation .
+?observation obeu-measure:amount ?amount2 .
+?slice ?economicClassification ?economicClass . filter(contains(str(?economicClassification), "economicClassification")) .
+?slice ?administrativeClassification ?adminClass . filter(contains(str(?administrativeClassification), "administrativeClassification"))
+?observation qb:dataSet/obeu-dimension:fiscalYear ?year .
+?observation gr-dimension:budgetPhase ?budgetPhase . }
+GROUP BY ?economicClass ?adminClass ?year ?budgetPhase
+LIMIT 10000
+
+
+
+"""
 
 class SparqlHelper(metaclass=ABCMeta):
     # Constants:
