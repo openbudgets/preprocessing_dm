@@ -25,14 +25,45 @@ Documentation is located at docs/html/
 $ iPython
 
 In [1]: import preprocessing_dm as ppdm
-In [2]: preprocessing_dm.list_dataset_name()
+In [2]: ppdm.get_all_observations_from_nonsliced_dataset("<http://data.openbudgets.eu/resource/dataset/aragon-expenditure-2010>")
+PREFIX qb:  <http://purl.org/linked-data/cube#>
+PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>
+Select ?observation ?amount ?administrativeClassification ?functionalClassification ?economicClassification ?fundingClassification
+ From <http://data.openbudgets.eu/resource/dataset/aragon-expenditure-2010>
+ WHERE {  ?observation obeu-measure:amount ?amount .
+?observation a qb:Observation .
+?observation <http://data.openbudgets.eu/ontology/dsd/aragon-budget-exp-2010/dimension/administrativeClassification> ?administrativeClassification .
+?observation <http://data.openbudgets.eu/ontology/dsd/aragon-budget-exp-2010/dimension/functionalClassification> ?functionalClassification .
+?observation <http://data.openbudgets.eu/ontology/dsd/aragon-budget-exp-2010/dimension/economicClassification> ?economicClassification .
+?observation <http://data.openbudgets.eu/ontology/dsd/aragon-budget-exp-2010/dimension/fundingClassification> ?fundingClassification .
+ }
 Out[2]:
-['budget-katerini-revenue-2016__235c7',
- 'budget-kalamaria-revenue-2004__e5589',
- 'aragon-2010-expenditure__7fc66',
- 'budget-heraklion-expenditure-2013__2c4eb',
- 'budget-heraklion-expenditure-2010__4c7cc',
- 'budget-heraklion-expenditure-2015__a9652',
- 'budget-athens-revenue-2004__220e3',
+[{'administrativeClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_organica_aragon_2010/01010'},
+  'amount': {'datatype': 'http://www.w3.org/2001/XMLSchema#decimal',
+   'type': 'typed-literal',
+   'value': '610051.68'},
+  'economicClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_economica_g_aragon_2010/121001'},
+  'functionalClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_funcional_aragon_2010/1111'},
+  'fundingClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_financiacion_g_aragon_2010/91002'},
+  'observation': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/dataset/aragon-2010-expenditure/observation/10'}},
+ {'administrativeClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_organica_aragon_2010/01010'},
+  'amount': {'datatype': 'http://www.w3.org/2001/XMLSchema#decimal',
+   'type': 'typed-literal',
+   'value': '150'},
+  'economicClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_economica_g_aragon_2010/206000'},
+  'functionalClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_funcional_aragon_2010/1113'},
+  'fundingClassification': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/codelist/estructura_financiacion_g_aragon_2010/91002'},
+  'observation': {'type': 'uri',
+   'value': 'http://data.openbudgets.eu/resource/dataset/aragon-2010-expenditure/observation/100'}},
  ...
  ]
+```
