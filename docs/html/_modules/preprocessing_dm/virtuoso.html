@@ -213,8 +213,8 @@
 
 <div class="viewcode-block" id="get_all_observations_from_sliced_dataset"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_all_observations_from_sliced_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_all_observations_from_sliced_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    :param dataset:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param dataset: name of a rdf dataset, which uses slice to structure observations</span>
+<span class="sd">    :return: a list of observations which columns of observation-id, slice function, all dimensions, amount (measure)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;PREFIX qb:  &lt;http://purl.org/linked-data/cube#&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">sqlStr</span> <span class="o">+=</span> <span class="s2">&quot;PREFIX obeu-measure: &lt;http://data.openbudgets.eu/ontology/dsd/measure/&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -239,6 +239,42 @@
         <span class="n">selectClause</span> <span class="o">+=</span> <span class="s2">&quot; ?</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
     <span class="n">whereClause</span> <span class="o">+=</span> <span class="s2">&quot; ?observation obeu-measure:amount ?amount . </span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">whereClause</span> <span class="o">+=</span> <span class="n">whereSliceFunction</span> <span class="o">+</span> <span class="n">whereSliceDimension</span> <span class="o">+</span> <span class="n">obsrevationClause</span> <span class="o">+</span> <span class="n">whereObservationDimension</span>
+    <span class="n">sqlStr</span> <span class="o">+=</span> <span class="s2">&quot;Select </span><span class="si">{0}</span><span class="se">\n</span><span class="s2"> From </span><span class="si">{1}</span><span class="se">\n</span><span class="s2"> WHERE {{ </span><span class="si">{2}</span><span class="s2"> }}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">selectClause</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">whereClause</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">query_virtuoso</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="s1">&#39;bindings&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_all_observations_from_nonsliced_dataset"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.virtuoso.get_all_observations_from_nonsliced_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_all_observations_from_nonsliced_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param dataset: name of a rdf dataset, which does not use slice to structure observations</span>
+<span class="sd">    :return: a list of observations which columns of observation-id, all dimensions, amount (measure). Common dimensions</span>
+<span class="sd">    are not included (save the size of the final output matrix/csv).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sqlStr</span> <span class="o">=</span> <span class="s2">&quot;PREFIX qb:  &lt;http://purl.org/linked-data/cube#&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">sqlStr</span> <span class="o">+=</span> <span class="s2">&quot;PREFIX obeu-measure: &lt;http://data.openbudgets.eu/ontology/dsd/measure/&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">whereClause</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># whereSliceFunction = &quot;?s qb:sliceStructure ?sfunc .\n&quot;</span>
+    <span class="n">selectClause</span> <span class="o">=</span> <span class="s2">&quot;?observation ?amount&quot;</span>
+    <span class="c1"># dimensionInSlice = get_dimensions_of_slice(dataset)</span>
+    <span class="n">dimensionInObservation</span> <span class="o">=</span> <span class="n">get_dimensions_of_observation</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+   <span class="c1"># whereSliceDimension = &quot;&quot;</span>
+   <span class="c1"># for i in range(len(dimensionInSlice)):</span>
+   <span class="c1">#     column = dimensionInSlice[i].split(&#39;/&#39;)[-1]</span>
+   <span class="c1">#     whereSliceDimension += &quot;?s &lt;{0}&gt; ?{1} . \n&quot;.format(dimensionInSlice[i], column)</span>
+   <span class="c1">#     selectClause += &quot; ?{0}&quot;.format(column)</span>
+
+    <span class="n">obsrevationClause</span> <span class="o">=</span> <span class="s2">&quot;?observation a qb:Observation .</span><span class="se">\n</span><span class="s2">&quot;</span>
+   <span class="c1"># selectClause += &quot; ?observation&quot;</span>
+    <span class="n">whereObservationDimension</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dimensionInObservation</span><span class="p">)):</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="n">dimensionInObservation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">whereObservationDimension</span> <span class="o">+=</span> <span class="s2">&quot;?observation &lt;</span><span class="si">{0}</span><span class="s2">&gt; ?</span><span class="si">{1}</span><span class="s2"> . </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dimensionInObservation</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">column</span><span class="p">)</span>
+        <span class="n">selectClause</span> <span class="o">+=</span> <span class="s2">&quot; ?</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="n">whereClause</span> <span class="o">+=</span> <span class="s2">&quot; ?observation obeu-measure:amount ?amount . </span><span class="se">\n</span><span class="s2">&quot;</span>
+   <span class="c1"># whereClause += whereSliceFunction + whereSliceDimension + obsrevationClause + whereObservationDimension</span>
+    <span class="n">whereClause</span> <span class="o">+=</span> <span class="n">obsrevationClause</span> <span class="o">+</span> <span class="n">whereObservationDimension</span>
     <span class="n">sqlStr</span> <span class="o">+=</span> <span class="s2">&quot;Select </span><span class="si">{0}</span><span class="se">\n</span><span class="s2"> From </span><span class="si">{1}</span><span class="se">\n</span><span class="s2"> WHERE {{ </span><span class="si">{2}</span><span class="s2"> }}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">selectClause</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">whereClause</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">query_virtuoso</span><span class="p">(</span><span class="n">sqlStr</span><span class="p">)</span>

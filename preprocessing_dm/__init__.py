@@ -8,5 +8,6 @@ from .virtuoso import get_all_codelists_of_named_graph
 from .virtuoso import list_dataset_name
 from .virtuoso import check_dataset_use_slice
 from .virtuoso import get_all_observations_from_sliced_dataset
+from .virtuoso import get_all_observations_from_nonsliced_dataset
 
 

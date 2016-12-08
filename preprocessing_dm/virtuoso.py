@@ -168,8 +168,8 @@ def get_slice_function(dataset):
 
 def get_all_observations_from_sliced_dataset(dataset):
     """
-    :param dataset:
-    :return:
+    :param dataset: name of a rdf dataset, which uses slice to structure observations
+    :return: a list of observations which columns of observation-id, slice function, all dimensions, amount (measure)
     """
     sqlStr = "PREFIX qb:  <http://purl.org/linked-data/cube#>\n"
     sqlStr += "PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>\n"
@@ -194,6 +194,42 @@ def get_all_observations_from_sliced_dataset(dataset):
         selectClause += " ?{0}".format(column)
     whereClause += " ?observation obeu-measure:amount ?amount . \n"
     whereClause += whereSliceFunction + whereSliceDimension + obsrevationClause + whereObservationDimension
+    sqlStr += "Select {0}\n From {1}\n WHERE {{ {2} }}".format(selectClause, dataset, whereClause)
+    print(sqlStr)
+    result = query_virtuoso(sqlStr)
+    return result['results']['bindings']
+
+
+def get_all_observations_from_nonsliced_dataset(dataset):
+    """
+    :param dataset: name of a rdf dataset, which does not use slice to structure observations
+    :return: a list of observations which columns of observation-id, all dimensions, amount (measure). Common dimensions
+    are not included (save the size of the final output matrix/csv).
+    """
+    sqlStr = "PREFIX qb:  <http://purl.org/linked-data/cube#>\n"
+    sqlStr += "PREFIX obeu-measure: <http://data.openbudgets.eu/ontology/dsd/measure/>\n"
+    whereClause = ""
+    # whereSliceFunction = "?s qb:sliceStructure ?sfunc .\n"
+    selectClause = "?observation ?amount"
+    # dimensionInSlice = get_dimensions_of_slice(dataset)
+    dimensionInObservation = get_dimensions_of_observation(dataset)
+
+   # whereSliceDimension = ""
+   # for i in range(len(dimensionInSlice)):
+   #     column = dimensionInSlice[i].split('/')[-1]
+   #     whereSliceDimension += "?s <{0}> ?{1} . \n".format(dimensionInSlice[i], column)
+   #     selectClause += " ?{0}".format(column)
+
+    obsrevationClause = "?observation a qb:Observation .\n"
+   # selectClause += " ?observation"
+    whereObservationDimension = ""
+    for i in range(len(dimensionInObservation)):
+        column = dimensionInObservation[i].split('/')[-1]
+        whereObservationDimension += "?observation <{0}> ?{1} . \n".format(dimensionInObservation[i], column)
+        selectClause += " ?{0}".format(column)
+    whereClause += " ?observation obeu-measure:amount ?amount . \n"
+   # whereClause += whereSliceFunction + whereSliceDimension + obsrevationClause + whereObservationDimension
+    whereClause += obsrevationClause + whereObservationDimension
     sqlStr += "Select {0}\n From {1}\n WHERE {{ {2} }}".format(selectClause, dataset, whereClause)
     print(sqlStr)
     result = query_virtuoso(sqlStr)

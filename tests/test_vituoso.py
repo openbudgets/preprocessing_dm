@@ -50,6 +50,26 @@ class TestVituoso(unittest.TestCase):
         assert item1 in result
         assert item2 in result
 
+    def test_get_all_observations_from_nonsliced_dataset(self):
+        dataset1 = "<http://data.openbudgets.eu/resource/dataset/aragon-expenditure-2010>"
+        reflst = [
+            {'observation': {
+                'value': 'http://data.openbudgets.eu/resource/dataset/aragon-2010-expenditure/observation/10',
+                'type': 'uri'}, 'amount': {'datatype': 'http://www.w3.org/2001/XMLSchema#decimal', 'value': '610051.68',
+                                           'type': 'typed-literal'}, 'economicClassification': {
+                'value': 'http://data.openbudgets.eu/resource/codelist/estructura_economica_g_aragon_2010/121001',
+                'type': 'uri'}, 'fundingClassification': {
+                'value': 'http://data.openbudgets.eu/resource/codelist/estructura_financiacion_g_aragon_2010/91002',
+                'type': 'uri'}, 'administrativeClassification': {
+                'value': 'http://data.openbudgets.eu/resource/codelist/estructura_organica_aragon_2010/01010',
+                'type': 'uri'}, 'functionalClassification': {
+                'value': 'http://data.openbudgets.eu/resource/codelist/estructura_funcional_aragon_2010/1111',
+                'type': 'uri'}}
+        ]
+        result = preprocessing_dm.get_all_observations_from_nonsliced_dataset(dataset1)
+        print(result[0])
+        assert reflst[0] in result
+
 
 if __name__ == '__main__':
     unittest.main()
