@@ -52,7 +52,7 @@ def get_algo4data(algo='', data='', dataPat=''):
                         return {'decision': False}
             return dic
         else:
-            algos = algo4dataDic.keys()
+            algos = list(algo4dataDic.keys())
             return {'decision': 'unknown algorithm', 'all_algorithms': algos}
 
 
