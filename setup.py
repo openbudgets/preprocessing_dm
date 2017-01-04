@@ -8,4 +8,5 @@ setup(name='preprocessing_dm',
       author_email='tian1shi2@gmail.com',
       license='MIT',
       packages=['preprocessing_dm'],
+      data_files=[('',['preprocessing_dm/algo4data.json', 'preprocessing_dm/algoIO.json'])],
       zip_safe=False)

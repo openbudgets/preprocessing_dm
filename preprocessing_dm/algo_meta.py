@@ -2,6 +2,25 @@ import json
 import os
 
 
+search_path = [
+        os.path.dirname(__file__),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..'))
+        ]
+
+
+def get_data_in_paths(dfile, paths):
+    """
+    return the first data file in the path list
+    :param dfile:
+    :param paths:
+    :return:
+    """
+    for pth in paths:
+        for f in os.listdir(pth):
+            if f == dfile:
+                return os.path.abspath(os.path.join(pth, dfile))
+
+
 def get_algo4data(algo='', data='', dataPat=''):
     """
     1) given an algorithm, return description of the algorithm and the list of datasets which the algorithm
@@ -14,7 +33,8 @@ def get_algo4data(algo='', data='', dataPat=''):
     :param dataPat:
     :return: json in 1), json {'decision': True/False/'unknown'} in case 2) and 3)
     """
-    algo4dataFile = os.path.abspath(os.path.join(os.path.dirname(__file__), 'algo4data.json'))
+    global search_path
+    algo4dataFile = get_data_in_paths("algo4data.json", search_path)
     with open(algo4dataFile) as algo4data:
         algo4dataDic = json.load(algo4data)
         if algo in algo4dataDic.keys():
@@ -35,7 +55,7 @@ def get_algoIO(algo):
     :param algo:
     :return: json, if algo not found, return {'decision': 'unknown algorithm'}
     """
-    algoIOFile = os.path.abspath(os.path.join(os.path.dirname(__file__), 'algoIO.json'))
+    algoIOFile = get_data_in_paths('algoIO.json', search_path)
     with open(algoIOFile) as algoIO:
         algoIODic = json.load(algoIO)
         if algo in algoIODic.keys():
