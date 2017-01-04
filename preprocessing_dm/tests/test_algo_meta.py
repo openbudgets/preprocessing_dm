@@ -100,6 +100,12 @@ class TestAlgoMeta(unittest.TestCase):
             print(pair[1])
             assert pair[1] == preprocessing_dm.get_algoIO(pair[0])
 
+    def test_get_all_algorithms_of(self):
+        all_algos = preprocessing_dm.get_all_algorithms_of('dataset_1')
+        print(all_algos)
+        assert 'dummyTimeSeries' in all_algos['algos']
+        assert 'sampleFunction' in all_algos['algos']
+
 
 if __name__ == '__main__':
     unittest.main()

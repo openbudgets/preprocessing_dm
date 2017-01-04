@@ -5,5 +5,12 @@
     "dataSetPatterns": ["athen", "esif"],
     "badDataSets": ["baddataset_x", "baddataset_y"],
     "badDataSetPatterns": ["bad"]
+  },
+  "sampleFunction" : {
+    "description": "bla bla bla about sampleFuncion",
+    "dataSets": ["dataset_1", "fdataset_2"],
+    "dataSetPatterns": ["fathen", "fesif"],
+    "badDataSets": ["fbaddataset_x", "fbaddataset_y"],
+    "badDataSetPatterns": ["fbad"]
   }
 }

@@ -55,6 +55,25 @@ def get_algo4data(algo='', data='', dataPat=''):
             return {'decision': 'unknown algorithm'}
 
 
+def get_all_algorithms_of(data):
+    """
+    return json {'algos': <a list of algorithms which can be applied for dataset>}
+    :param data:
+    :return: json
+    """
+    global search_path
+    algo4dataFile = get_data_in_paths("algo4data.json", search_path)
+    rlt = []
+    with open(algo4dataFile) as algo4data:
+        algo4dataDic = json.load(algo4data)
+        for algo in algo4dataDic.keys():
+            dic = algo4dataDic[algo]
+            if data in dic["dataSets"]:
+                rlt.append(algo)
+    return {'algos': rlt}
+
+
+
 def get_algoIO(algo):
     """
     given an algorithm name, return the detailed input/output of this algorithm
