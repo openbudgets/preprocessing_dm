@@ -39,12 +39,18 @@ def get_algo4data(algo='', data='', dataPat=''):
         algo4dataDic = json.load(algo4data)
         if algo in algo4dataDic.keys():
             dic = algo4dataDic[algo]
-            if data in dic["dataSets"] or dataPat in dic["dataSetPatterns"]:
+            if data in dic["dataSets"]:
                 return {'decision' : True}
-            elif data in dic["badDataSets"] or dataPat in dic["badDataSetPatterns"]:
+            elif data in dic["badDataSets"]:
                 return {'decision': False}
-            else:
-                return dic
+            elif dataPat != '':
+                for pat in dic["dataSetPatterns"]:
+                    if pat in dataPat:
+                        return {'decision': True}
+                for pat in dic["badDataSetPatterns"]:
+                    if pat in dataPat:
+                        return {'decision': False}
+            return dic
         else:
             return {'decision': 'unknown algorithm'}
 

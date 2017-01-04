@@ -66,4 +66,22 @@ Out[2]:
    'value': 'http://data.openbudgets.eu/resource/dataset/aragon-2010-expenditure/observation/100'}},
  ...
  ]
+In [4]: ppdm.get_algo4data('dummyTimeSeries')
+Out[4]:
+{'badDataSetPatterns': ['bad'],
+ 'badDataSets': ['baddataset_x', 'baddataset_y'],
+ 'dataSetPatterns': ['athen', 'esif'],
+ 'dataSets': ['dataset_1', 'dataset_2'],
+ 'description': 'bla bla bla about dummyTimeSeries'}
+In [5]: ppdm.get_algo4data('dummyTimeSeries', data='dataset_1')
+Out[5]: {'decision': True}
+In [7]: ppdm.get_algo4data('dummyTimeSeries', data='baddataset_x')
+Out[7]: {'decision': False}
+In [8]: ppdm.get_algo4data('dummyTimeSeries', dataPat='athen_dataset_1')
+Out[8]: {'decision': True}
+In [9]: ppdm.get_algo4data('dummyTimeSeries', dataPat='bad_dataset_xyx')
+Out[9]: {'decision': False}
+In [10]: ppdm.get_algo4data('unknown fun')
+Out[10]: {'decision': 'unknown algorithm'}
+
 ```
