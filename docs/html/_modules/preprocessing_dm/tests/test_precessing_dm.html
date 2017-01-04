@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>preprocessing_dm.tests.test_precessing_dm &#8212; Data Pre-Processing for Data-Mining 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Data Pre-Processing for Data-Mining 0.1.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for preprocessing_dm.tests.test_precessing_dm</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">.context</span> <span class="k">import</span> <span class="n">preprocessing_dm</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+
+<div class="viewcode-block" id="DataPreprocessingForOutlierDetectionLOF"><a class="viewcode-back" href="../../../preprocessing_dm.tests.html#preprocessing_dm.tests.test_precessing_dm.DataPreprocessingForOutlierDetectionLOF">[docs]</a><span class="k">class</span> <span class="nc">DataPreprocessingForOutlierDetectionLOF</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Basic test cases.&quot;&quot;&quot;</span>
+
+    <span class="nd">@unittest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;testing skipping&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="DataPreprocessingForOutlierDetectionLOF.test_create_csv_for_LOF"><a class="viewcode-back" href="../../../preprocessing_dm.tests.html#preprocessing_dm.tests.test_precessing_dm.DataPreprocessingForOutlierDetectionLOF.test_create_csv_for_LOF">[docs]</a>    <span class="k">def</span> <span class="nf">test_create_csv_for_LOF</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">input_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;observation&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="s2">&quot;economicClass&quot;</span><span class="p">,</span> <span class="s2">&quot;adminClass&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;budgetPhase&quot;</span><span class="p">]</span>
+        <span class="n">input_dict_cols2aggr</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="s2">&quot;MIN&quot;</span><span class="p">,</span> <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;SUM&quot;</span><span class="p">}</span>
+        <span class="n">input_datasets</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012&gt;&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2013&gt;&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;&lt;http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2014&gt;&quot;</span><span class="p">]</span>
+        <span class="n">sparql_helper_ce</span> <span class="o">=</span> <span class="n">preprocessing_dm</span><span class="o">.</span><span class="n">SparqlCEHelper</span><span class="p">()</span>
+        <span class="n">txt</span> <span class="o">=</span> <span class="n">sparql_helper_ce</span><span class="o">.</span><span class="n">create_csv_as_text</span><span class="p">(</span><span class="n">input_datasets</span><span class="p">,</span> <span class="n">input_cols</span><span class="p">,</span> <span class="n">input_dict_cols2aggr</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span></div>
+
+    <span class="nd">@unittest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;testing skipping&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="DataPreprocessingForOutlierDetectionLOF.test_list_dataset_name"><a class="viewcode-back" href="../../../preprocessing_dm.tests.html#preprocessing_dm.tests.test_precessing_dm.DataPreprocessingForOutlierDetectionLOF.test_list_dataset_name">[docs]</a>    <span class="k">def</span> <span class="nf">test_list_dataset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">datasetNames</span> <span class="o">=</span> <span class="n">preprocessing_dm</span><span class="o">.</span><span class="n">list_dataset_name</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;totally &#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">datasetNames</span><span class="p">),</span> <span class="s1">&#39; data names&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">datasetNames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">212</span></div></div>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Maik, Tiansi.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

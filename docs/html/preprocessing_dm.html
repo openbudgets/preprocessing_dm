@@ -26,6 +26,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Data Pre-Processing for Data-Mining 0.1.0 documentation" href="index.html" />
+    <link rel="next" title="preprocessing_dm.tests package" href="preprocessing_dm.tests.html" />
     <link rel="prev" title="Welcome to preprocessing_dm’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -44,8 +45,64 @@
             
   <div class="section" id="preprocessing-dm-package">
 <h1>preprocessing_dm package<a class="headerlink" href="#preprocessing-dm-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preprocessing_dm.tests.html">preprocessing_dm.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_dm.tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_dm.tests.html#module-preprocessing_dm.tests.context">preprocessing_dm.tests.context module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_dm.tests.html#module-preprocessing_dm.tests.test_algo_meta">preprocessing_dm.tests.test_algo_meta module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_dm.tests.html#module-preprocessing_dm.tests.test_core">preprocessing_dm.tests.test_core module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_dm.tests.html#module-preprocessing_dm.tests.test_precessing_dm">preprocessing_dm.tests.test_precessing_dm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_dm.tests.html#module-preprocessing_dm.tests.test_vituoso">preprocessing_dm.tests.test_vituoso module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing_dm.tests.html#module-preprocessing_dm.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-preprocessing_dm.algo_meta">
+<span id="preprocessing-dm-algo-meta-module"></span><h2>preprocessing_dm.algo_meta module<a class="headerlink" href="#module-preprocessing_dm.algo_meta" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="preprocessing_dm.algo_meta.get_algo4data">
+<code class="descclassname">preprocessing_dm.algo_meta.</code><code class="descname">get_algo4data</code><span class="sig-paren">(</span><em>algo=''</em>, <em>data=''</em>, <em>dataPat=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/algo_meta.html#get_algo4data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.algo_meta.get_algo4data" title="Permalink to this definition">¶</a></dt>
+<dd><ol class="arabic simple">
+<li>given an algorithm, return description of the algorithm and the list of datasets which the algorithm
+can be applied;</li>
+<li>given an algorithm and a dataset, decide whether the algorithm can be applied for this dataset;</li>
+<li>given an algorithm and a dataset pattern, decide whether the algorithm can be applied for all datasets
+having this pattern;</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>algo</strong> &#8211; </li>
+<li><strong>data</strong> &#8211; </li>
+<li><strong>dataPat</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">json in 1), json {&#8216;decision&#8217;: True/False/&#8217;unknown&#8217;} in case 2) and 3)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="preprocessing_dm.algo_meta.get_algoIO">
+<code class="descclassname">preprocessing_dm.algo_meta.</code><code class="descname">get_algoIO</code><span class="sig-paren">(</span><em>algo</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/preprocessing_dm/algo_meta.html#get_algoIO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_dm.algo_meta.get_algoIO" title="Permalink to this definition">¶</a></dt>
+<dd><p>given an algorithm name, return the detailed input/output of this algorithm
+:param algo:
+:return: json, if algo not found, return {&#8216;decision&#8217;: &#8216;unknown algorithm&#8217;}</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-preprocessing_dm.core">
 <span id="preprocessing-dm-core-module"></span><h2>preprocessing_dm.core module<a class="headerlink" href="#module-preprocessing_dm.core" title="Permalink to this headline">¶</a></h2>
@@ -248,7 +305,9 @@ debug</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">preprocessing_dm package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-preprocessing_dm.algo_meta">preprocessing_dm.algo_meta module</a></li>
 <li><a class="reference internal" href="#module-preprocessing_dm.core">preprocessing_dm.core module</a></li>
 <li><a class="reference internal" href="#module-preprocessing_dm.send_request">preprocessing_dm.send_request module</a></li>
 <li><a class="reference internal" href="#module-preprocessing_dm.util">preprocessing_dm.util module</a></li>
@@ -262,6 +321,7 @@ debug</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Welcome to preprocessing_dm&#8217;s documentation!</a></li>
+      <li>Next: <a href="preprocessing_dm.tests.html" title="next chapter">preprocessing_dm.tests package</a></li>
   </ul></li>
 </ul>
 </div>

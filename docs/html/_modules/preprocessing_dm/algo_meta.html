@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>preprocessing_dm.algo_meta &#8212; Data Pre-Processing for Data-Mining 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Data Pre-Processing for Data-Mining 0.1.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for preprocessing_dm.algo_meta</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="get_algo4data"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.algo_meta.get_algo4data">[docs]</a><span class="k">def</span> <span class="nf">get_algo4data</span><span class="p">(</span><span class="n">algo</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dataPat</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    1) given an algorithm, return description of the algorithm and the list of datasets which the algorithm</span>
+<span class="sd">       can be applied;</span>
+<span class="sd">    2) given an algorithm and a dataset, decide whether the algorithm can be applied for this dataset;</span>
+<span class="sd">    3) given an algorithm and a dataset pattern, decide whether the algorithm can be applied for all datasets</span>
+<span class="sd">       having this pattern;</span>
+<span class="sd">    :param algo:</span>
+<span class="sd">    :param data:</span>
+<span class="sd">    :param dataPat:</span>
+<span class="sd">    :return: json in 1), json {&#39;decision&#39;: True/False/&#39;unknown&#39;} in case 2) and 3)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">algo4dataFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s1">&#39;algo4data.json&#39;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">algo4dataFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">algo4data</span><span class="p">:</span>
+        <span class="n">algo4dataDic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">algo4data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">algo</span> <span class="ow">in</span> <span class="n">algo4dataDic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">dic</span> <span class="o">=</span> <span class="n">algo4dataDic</span><span class="p">[</span><span class="n">algo</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;dataSets&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">dataPat</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;dataSetPatterns&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;decision&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;badDataSets&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">dataPat</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;badDataSetPatterns&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;decision&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">dic</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;decision&#39;</span><span class="p">:</span> <span class="s1">&#39;unknown algorithm&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_algoIO"><a class="viewcode-back" href="../../preprocessing_dm.html#preprocessing_dm.algo_meta.get_algoIO">[docs]</a><span class="k">def</span> <span class="nf">get_algoIO</span><span class="p">(</span><span class="n">algo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    given an algorithm name, return the detailed input/output of this algorithm</span>
+<span class="sd">    :param algo:</span>
+<span class="sd">    :return: json, if algo not found, return {&#39;decision&#39;: &#39;unknown algorithm&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">algoIOFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s1">&#39;algoIO.json&#39;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">algoIOFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">algoIO</span><span class="p">:</span>
+        <span class="n">algoIODic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">algoIO</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">algo</span> <span class="ow">in</span> <span class="n">algoIODic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">algoIODic</span><span class="p">[</span><span class="n">algo</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;decision&#39;</span><span class="p">:</span> <span class="s1">&#39;unknown algorithm&#39;</span><span class="p">}</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Maik, Tiansi.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

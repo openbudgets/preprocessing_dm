@@ -1,8 +1,23 @@
 preprocessing_dm package
 ========================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    preprocessing_dm.tests
+
 Submodules
 ----------
+
+preprocessing_dm.algo_meta module
+---------------------------------
+
+.. automodule:: preprocessing_dm.algo_meta
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 preprocessing_dm.core module
 ----------------------------
