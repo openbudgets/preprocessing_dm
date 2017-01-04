@@ -1,0 +1,9 @@
+{
+  "dummyTimeSeries" : {
+    "description": "bla bla bla about dummyTimeSeries",
+    "dataSets": ["dataset_1", "dataset_2"],
+    "dataSetPatterns": ["athen", "esif"],
+    "badDataSets": ["baddataset_x", "baddataset_y"],
+    "badDataSetPatterns": ["bad"]
+  }
+}

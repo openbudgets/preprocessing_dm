@@ -9,5 +9,7 @@ from .virtuoso import list_dataset_name
 from .virtuoso import check_dataset_use_slice
 from .virtuoso import get_all_observations_from_sliced_dataset
 from .virtuoso import get_all_observations_from_nonsliced_dataset
+from .algo_meta import get_algo4data
+from .algo_meta import get_algoIO
 
 

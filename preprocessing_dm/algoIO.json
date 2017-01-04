@@ -1,0 +1,58 @@
+{
+  "dummyTimeSeries": {
+    "algorithm": {
+      "title": "Time Series",
+      "name": "time_series",
+      "instance": "timeSeriesAlgorithm",
+      "method": "POST",
+      "endpoint": [
+        "DAMUrl",
+        "/library/TimeSeries.OBeu/R/open_spending.ts"
+      ],
+      "prompt": "Select an aggregate, a time-related drilldown and the prediction steps parameter from the left and click on the execute button on top right."
+    },
+
+    "input": {
+      "raw_data": {
+        "cardinality": "1",
+        "type": "BABBAGE_AGGREGATE_URI",
+        "name": "json_data",
+        "title": "Data coming from an aggregation",
+        "guess": false,
+        "required": true
+      },
+      "time_dimension": {
+        "cardinality": "1",
+        "type": "ATTRIBUTE_REF",
+        "name": "time",
+        "title": "Time dimension",
+        "guess": true,
+        "required": true
+      },
+      "amount_aggregate": {
+        "cardinality": "1",
+        "type": "AGGREGATE_REF",
+        "name": "amount",
+        "title": "Amount aggregate",
+        "guess": true,
+        "required": true
+      },
+      "prediction_steps": {
+        "cardinality": "1",
+        "type": "PARAMETER",
+        "name": "prediction_steps",
+        "title": "Prediction Steps",
+        "data_type": "number",
+        "default_value": 4,
+        "guess": false,
+        "required": false
+      }
+    },
+    "output": {
+      "name": "output",
+      "instance": "json_outout",
+      "cardinality": "1",
+      "type": "TABLE"
+    }
+  }
+}
