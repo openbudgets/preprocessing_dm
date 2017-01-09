@@ -76,7 +76,8 @@
         "name": "filename",
         "title": "Select one or more files to identify anormal values",
         "guess": false,
-        "required": true
+        "required": true,
+        "note": "all input filenames are concatenated by '+', starting with '+', e.g., '+budget-kilkis-expenditure-2012'or '+budget-kilkis-expenditure-2012+budget-kilkis-expenditure-2013' "
       },
       "output_file": {
         "cardinality": "1",
