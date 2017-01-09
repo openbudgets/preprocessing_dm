@@ -21,7 +21,7 @@ def get_data_in_paths(dfile, paths):
                 return os.path.abspath(os.path.join(pth, dfile))
 
 
-def get_algo4data(algo='', data='', dataPat=''):
+def get_algo4data(algo='', data=''):
     """
     1) given an algorithm, return description of the algorithm and the list of datasets which the algorithm
        can be applied;
@@ -39,17 +39,10 @@ def get_algo4data(algo='', data='', dataPat=''):
         algo4dataDic = json.load(algo4data)
         if algo in algo4dataDic.keys():
             dic = algo4dataDic[algo]
-            if data in dic["dataSets"]:
-                return {'decision' : True}
-            elif data in dic["badDataSets"]:
+            if data in dic["dataSets"] + dic["dataSetPatterns"]:
+                return {'decision': True}
+            elif data in dic["badDataSets"] + dic["badDataSetPatterns"]:
                 return {'decision': False}
-            elif dataPat != '':
-                for pat in dic["dataSetPatterns"]:
-                    if pat in dataPat:
-                        return {'decision': True}
-                for pat in dic["badDataSetPatterns"]:
-                    if pat in dataPat:
-                        return {'decision': False}
             return dic
         else:
             algos = list(algo4dataDic.keys())
