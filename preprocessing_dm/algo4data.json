@@ -8,7 +8,7 @@
   },
   "outlierDetection_LOF" : {
     "description": "outlier detection based on local outlier factor",
-    "dataSets": ["Kilkis_new.csv"],
+    "dataSets": ["Kilkis_neu.csv"],
     "dataSetPatterns": ["Kilkis"],
     "badDataSets": ["baddataset_x", "baddataset_y"],
     "badDataSetPatterns": ["bad"]
