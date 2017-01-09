@@ -62,7 +62,7 @@ def get_all_algorithms_of(data):
         algo4dataDic = json.load(algo4data)
         for algo in algo4dataDic.keys():
             dic = algo4dataDic[algo]
-            if data in dic["dataSets"]:
+            if data in dic["dataSets"]+ dic["dataSetPatterns"]:
                 rlt.append(algo)
     return {'algos': rlt}
 
