@@ -1,8 +1,8 @@
 {
   "dummyTimeSeries" : {
     "description": "bla bla bla about dummyTimeSeries",
-    "dataSets": ["dataset_1", "dataset_2"],
-    "dataSetPatterns": ["athen", "esif"],
+    "dataSets": ["budget-katerini-revenue-2016__235c7"],
+    "dataSetPatterns": ["katerini-revenue", "esif"],
     "badDataSets": ["baddataset_x", "baddataset_y"],
     "badDataSetPatterns": ["bad"]
   },
