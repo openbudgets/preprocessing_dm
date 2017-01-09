@@ -54,5 +54,55 @@
       "cardinality": "1",
       "type": "TABLE"
     }
+  },
+  "outlierDetection_LOF": {
+    "algorithm": {
+      "title": "outlier Detection based on Local Outlier Factor",
+      "name": "do_outlier_detection_lof",
+      "instance": "outlier_dm.detect_outliers_subpopulation_lattice",
+      "method": "POST",
+      "endpoint": [
+        "DAMUrl",
+        "/outlier_detection/LOF",
+        "sample|real"
+      ],
+      "prompt": "select one or more files, to detect most isolated items (based on density)"
+    },
+    "input": {
+      "description": "if the endpoint is '<DAMUrl>/outlier_detection/LOF/sample', no input is needed. The server uses '<DAMUrl>/Data/Kilkis_neu.csv' as input csv file. Following input is for '<DAMUrl>/outlier_detection/LOF/real'",
+      "raw_data": {
+        "cardinality": "1",
+        "type": "turtle",
+        "name": "filename",
+        "title": "Select one or more files to identify anormal values",
+        "guess": false,
+        "required": true
+      },
+      "output_file": {
+        "cardinality": "1",
+        "type": "string",
+        "name": "output",
+        "title": "Output File Name",
+        "guess": false,
+        "default": "Result",
+        "required": false
+      },
+      "full_output": {
+        "cardinality": "1",
+        "type": "string",
+        "name": "full_output",
+        "title": "Whether full output",
+        "guess": false,
+        "default": "partial",
+        "required": false
+      }
+    },
+    "output": {
+      "name": "output",
+      "instance": "json_outout with 'filename' as the key",
+      "cardinality": "1",
+      "type": "CSV",
+      "location": "<DAMUrl>/static/output"
+    }
   }
 }

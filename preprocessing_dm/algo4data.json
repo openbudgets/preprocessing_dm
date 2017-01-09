@@ -6,6 +6,13 @@
     "badDataSets": ["baddataset_x", "baddataset_y"],
     "badDataSetPatterns": ["bad"]
   },
+  "outlierDetection_LOF" : {
+    "description": "outlier detection based on local outlier factor",
+    "dataSets": ["Kilkis_new.csv"],
+    "dataSetPatterns": ["Kilkis"],
+    "badDataSets": ["baddataset_x", "baddataset_y"],
+    "badDataSetPatterns": ["bad"]
+  },
   "sampleFunction" : {
     "description": "bla bla bla about sampleFuncion",
     "dataSets": ["dataset_1", "fdataset_2"],
