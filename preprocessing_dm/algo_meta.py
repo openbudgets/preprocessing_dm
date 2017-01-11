@@ -1,5 +1,6 @@
 import json
 import os
+from copy import deepcopy
 
 
 search_path = [
@@ -37,20 +38,22 @@ def get_algo4data(algo='', data=''):
     algo4dataFile = get_data_in_paths("algo4data.json", search_path)
     with open(algo4dataFile) as algo4data:
         algo4dataDic = json.load(algo4data)
+
         if algo in algo4dataDic.keys():
             dic = algo4dataDic[algo]
             data = data.lower()
-            if data in dic["dataSets"]:
-                return {'decision': True}
+            if data in dic["dataSets"] or "?any" in dic["dataSets"]:
+                dic.update({'name': algo, 'decision': True})
+                return dic
             else:
                 for pat in dic["dataSetPatterns"]:
                     if pat in data:
-                        return {'decision': True}
+                        return dic.update({"name": algo, 'decision': True})
                 if data in dic["badDataSets"]:
-                    return {'decision': False}
+                    return dic.update({"name": algo, 'decision': False})
                 for pat in dic["badDataSetPatterns"]:
                     if pat in data:
-                        return {'decision': False}
+                        return dic.update({"name": algo, 'decision': False})
             return dic
         else:
             algos = list(algo4dataDic.keys())
@@ -71,10 +74,9 @@ def get_all_algorithms_of(data):
         for algo in algo4dataDic.keys():
             dic = algo4dataDic[algo]
             data = data.lower()
-            if data in dic["dataSets"]+ dic["dataSetPatterns"]:
+            if data in dic["dataSets"] or "?any" in dic["dataSets"]:
                 rlt.append(algo)
     return {'algos': rlt}
-
 
 
 def get_algoIO(algo):

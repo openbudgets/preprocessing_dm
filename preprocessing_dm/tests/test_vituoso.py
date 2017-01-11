@@ -8,6 +8,7 @@ import unittest
 
 class TestVituoso(unittest.TestCase):
     """Basic test cases."""
+    @unittest.skip('')
     def test_check_dataset_use_slice(self):
         input_dataset1 = "<http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012>"
         input_dataset2 = "<http://data.openbudgets.eu/resource/dataset/aragon-2006-expenditure>"
@@ -22,6 +23,7 @@ class TestVituoso(unittest.TestCase):
         print(result)
         assert result == ref
 
+    @unittest.skip('')
     def test_get_all_observations_from_sliced_dataset(self):
         dataset1 = "<http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012>"
         reflst = [{'s': {'value': 'http://data.openbudgets.eu/resource/dataset/budget-kilkis-expenditure-2012/slice/00.6031', 'type': 'uri'},
@@ -50,6 +52,7 @@ class TestVituoso(unittest.TestCase):
         assert item1 in result
         assert item2 in result
 
+    @unittest.skip('')
     def test_get_all_observations_from_nonsliced_dataset(self):
         dataset1 = "<http://data.openbudgets.eu/resource/dataset/aragon-expenditure-2010>"
         reflst = [

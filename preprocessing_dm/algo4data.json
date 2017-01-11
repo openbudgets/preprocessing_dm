@@ -1,14 +1,14 @@
 {
   "TimeSeries" : {
     "description": "bla bla bla about TimeSeries",
-    "dataSets": ["budget-katerini-revenue-2016__235c7"],
-    "dataSetPatterns": ["katerini-revenue", "esif", ""],
+    "dataSets": ["?any", "budget-katerini-revenue-2016__235c7"],
+    "dataSetPatterns": ["katerini-revenue", "esif"],
     "badDataSets": ["baddataset_x", "baddataset_y"],
     "badDataSetPatterns": ["bad"]
   },
   "outlierDetection_LOF" : {
     "description": "outlier detection based on local outlier factor",
-    "dataSets": ["kilkis_neu.csv"],
+    "dataSets": ["?any", "kilkis_neu.csv"],
     "dataSetPatterns": ["kilkis"],
     "badDataSets": ["baddataset_x", "baddataset_y"],
     "badDataSetPatterns": ["bad"]

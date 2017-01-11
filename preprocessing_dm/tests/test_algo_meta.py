@@ -9,32 +9,35 @@ import unittest
 class TestAlgoMeta(unittest.TestCase):
     """Basic test cases."""
     def test_get_algo4data(self):
-        test_lst = [('dummyTimeSeries', 'dataset_1', '',
-                     {'decision': True}),
-                    ('dummyTimeSeries', 'baddataset_x', '',
-                     {'decision': False}),
-                    ('dummyTimeSeries', '', 'bad',
-                     {'decision': False}),
-                    ('dummyTimeSeries', 'dataset_1', 'dataset',
-                     {'decision':True}),
-                    ('dummyTimeSeries', '', '',
-                     {
-                                            "description": "bla bla bla about dummyTimeSeries",
-                                            "dataSets": ["dataset_1", "dataset_2"],
-                                            "dataSetPatterns": ["athen", "esif"],
-                                            "badDataSets": ["baddataset_x", "baddataset_y"],
-                                            "badDataSetPatterns": ["bad"]
-                    }),
-                    ('dummyFunction', 'dataset_1', 'dataset',
-                     {'decision': 'unknown algorithm'}),
+        test_lst = [('TimeSeries', 'dataset_1',
+                     {'dataSets': ['?any', 'budget-katerini-revenue-2016__235c7'], 'decision': True,
+                      'dataSetPatterns': ['katerini-revenue', 'esif'], 'badDataSets': ['baddataset_x', 'baddataset_y'],
+                      'badDataSetPatterns': ['bad'], 'description': 'bla bla bla about TimeSeries',
+                      'name': 'TimeSeries'}),
+                    ('TimeSeries', 'baddataset_x',
+                     {'description': 'bla bla bla about TimeSeries', 'decision': True, 'badDataSetPatterns': ['bad'],
+                      'dataSets': ['?any', 'budget-katerini-revenue-2016__235c7'],
+                      'dataSetPatterns': ['katerini-revenue', 'esif'], 'name': 'TimeSeries',
+                      'badDataSets': ['baddataset_x', 'baddataset_y']}),
+                    ('TimeSeries', '',
+                     {'description': 'bla bla bla about TimeSeries', 'dataSetPatterns': ['katerini-revenue', 'esif'],
+                      'name': 'TimeSeries', 'badDataSets': ['baddataset_x', 'baddataset_y'], 'decision': True,
+                      'badDataSetPatterns': ['bad'], 'dataSets': ['?any', 'budget-katerini-revenue-2016__235c7']}),
+                    ('TimeSeries', 'dataset_1',
+                     {'description': 'bla bla bla about TimeSeries', 'decision': True, 'badDataSetPatterns': ['bad'],
+                      'dataSetPatterns': ['katerini-revenue', 'esif'], 'badDataSets': ['baddataset_x', 'baddataset_y'],
+                      'dataSets': ['?any', 'budget-katerini-revenue-2016__235c7'], 'name': 'TimeSeries'}),
+                    # ('dummyFunction', 'dataset_1',
+                    # {'all_algorithms': ['outlierDetection_LOF', 'TimeSeries', 'sampleFunction'],
+                    #  'decision': 'unknown algorithm'}),
                     ]
         for pair in test_lst:
-            print(pair)
-            print(preprocessing_dm.get_algo4data(algo=pair[0], data=pair[1], dataPat=pair[2]))
-            assert pair[3] == preprocessing_dm.get_algo4data(algo=pair[0], data=pair[1], dataPat=pair[2])
+            print(pair[0], pair[1], '*')
+            print(preprocessing_dm.get_algo4data(algo=pair[0], data=pair[1]))
+            assert pair[2] == preprocessing_dm.get_algo4data(algo=pair[0], data=pair[1])
 
     def test_get_algoIO(self):
-        test_lst = [('dummyTimeSeries', {
+        test_lst = [('TimeSeries', {
                                         "algorithm": {
                                             "title": "Time Series",
                                             "name": "time_series",
@@ -103,7 +106,7 @@ class TestAlgoMeta(unittest.TestCase):
     def test_get_all_algorithms_of(self):
         all_algos = preprocessing_dm.get_all_algorithms_of('dataset_1')
         print(all_algos)
-        assert 'dummyTimeSeries' in all_algos['algos']
+        assert 'TimeSeries' in all_algos['algos']
         assert 'sampleFunction' in all_algos['algos']
 
 
