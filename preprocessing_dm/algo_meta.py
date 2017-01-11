@@ -40,10 +40,17 @@ def get_algo4data(algo='', data=''):
         if algo in algo4dataDic.keys():
             dic = algo4dataDic[algo]
             data = data.lower()
-            if data in dic["dataSets"] + dic["dataSetPatterns"]:
+            if data in dic["dataSets"]:
                 return {'decision': True}
-            elif data in dic["badDataSets"] + dic["badDataSetPatterns"]:
-                return {'decision': False}
+            else:
+                for pat in dic["dataSetPatterns"]:
+                    if pat in data:
+                        return {'decision': True}
+                if data in dic["badDataSets"]:
+                    return {'decision': False}
+                for pat in dic["badDataSetPatterns"]:
+                    if pat in data:
+                        return {'decision': False}
             return dic
         else:
             algos = list(algo4dataDic.keys())
