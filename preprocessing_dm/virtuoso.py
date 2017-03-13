@@ -9,7 +9,7 @@ try:
     SPARQLEndPoint = os.environ['VIRTUOSO_ENDPOINT']
     FILE_OF_GRAPH_NAMES = os.environ['FILE_OF_GRAPH_NAMES']
 except Exception:
-    SPARQLEndPoint = "http://eis-openbudgets.iais.fraunhofer.de/virtuoso/sparql"
+    SPARQLEndPoint = "http://data.openbudgets.eu/sparql"
     FILE_OF_GRAPH_NAMES = "GRAPH_NAMES.txt"
 
 
@@ -34,6 +34,15 @@ def query_virtuoso(sqlStr):
 
 
 def get_all_names_of_named_graph(db, GraphName, use_cache='True'):
+    """
+    ?dataset a qb:DataSet .
+    ?dataset obeu-dimension:organization <http://dbpedia.org/resource/Bonn> .
+    ?dataset obeu-dimension:fiscalYear <http://reference.data.gov.uk/id/year/2015> .
+    :param db:
+    :param GraphName:
+    :param use_cache:
+    :return:
+    """
     nlst = []
     names = ""
     if use_cache == 'True':
@@ -55,7 +64,7 @@ def get_all_names_of_named_graph(db, GraphName, use_cache='True'):
         for result in results["results"]["bindings"]:
             nm = str(result['g']['value'])
             recordId += 1
-            if nm.startswith('http'):
+            if nm.startswith('http://data.openbudgets.eu'):
                 nlst.append(nm)
                 names += nm+"\n"
                 try:
@@ -117,6 +126,8 @@ def get_dimensions_from_rdfrecord(dataset, record=''):
     elif record == '':
         sqlStr = "SELECT ?p FROM {} WHERE {{?s ?p ?o . filter(contains(str(?p), 'dimension'))}}  group by ?p".format(dataset)
     result = query_virtuoso(sqlStr)
+    print(sqlStr)
+    print(result)
     lst = []
     for record in result['results']['bindings']:
         lst.append(record['p']['value'])

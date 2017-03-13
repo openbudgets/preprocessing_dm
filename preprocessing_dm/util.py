@@ -6,7 +6,27 @@
     Python Version: 3.5
 """
 import os
+import httplib2
+import json
+import string
+import random
 from .send_request import SparqlCEHelper
+
+
+def down_file(url=None):
+    h = httplib2.Http(".cache")
+    resp, content = h.request(url, "GET")
+    return content
+
+
+def down_json_content(url=None):
+    jsonBytes = down_file(url)
+    jsonString = jsonBytes.decode("utf-8")
+    return json.loads(jsonString)
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
 def ce_from_file_names_query_fuseki_output_csv(filenames, dataPath, debug=False):

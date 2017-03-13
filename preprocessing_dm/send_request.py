@@ -62,7 +62,7 @@ LIMIT 10000
 
 class SparqlHelper(metaclass=ABCMeta):
     # Constants:
-    __URL = "http://eis-openbudgets.iais.fraunhofer.de/virtuoso/sparql"
+    __URL = "http://data.openbudgets.eu/sparql"
     __HEADERS = {"Accept": "text/csv"}
 
     @abstractmethod
