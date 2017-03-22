@@ -10,6 +10,7 @@ import httplib2
 import json
 import string
 import random
+from .virtuoso import query_virtuoso
 from .send_request import SparqlCEHelper
 
 
@@ -19,7 +20,39 @@ def down_file(url=None):
     return content
 
 
+def is_json(jstr):
+    try:
+        json.loads(jstr)
+        return True
+    except ValueError:  # includes JSONDecodeError
+        return False
+
+
+def is_sparql(jstr):
+    jstr = jstr.strip().lower()
+    if 'select' in jstr and 'where' in jstr:
+        return True
+    else:
+        return False
+
+
+def do_sparql_query(urlContent, output_format='json'):
+    return query_virtuoso(urlContent, output_format=output_format)
+
+
+def down_content(url=None):
+    print('url', url)
+    urlContent = down_file(url)
+    urlContent = str(urlContent.decode("utf-8"))
+    if is_json(urlContent):
+        return json.loads(urlContent), 'json'
+    elif is_sparql(urlContent):
+        jsonStruc = do_sparql_query(urlContent, output_format='json')
+        return jsonStruc, 'sparql'
+
+
 def down_json_content(url=None):
+    print('url', url)
     jsonBytes = down_file(url)
     jsonString = jsonBytes.decode("utf-8")
     return json.loads(jsonString)

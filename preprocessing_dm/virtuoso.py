@@ -19,14 +19,17 @@ sparql = SPARQLWrapper(SPARQLEndPoint)
 ###
 #  query virtuoso
 #
-def query_virtuoso(sqlStr):
+def query_virtuoso(sqlStr, output_format='json'):
     """
     send SPARQL string sqlStr to virtuoso server, and return result in json format
     :param sqlStr:
     :return:
     """
     sparql.setQuery(sqlStr)
-    sparql.setReturnFormat(JSON)
+    if output_format == 'json':
+        sparql.setReturnFormat(JSON)
+    else:
+        sparql.setReturnFormat(JSON)
     return sparql.query().convert()
 #
 #  List all names of named-graphs

@@ -14,7 +14,8 @@ class CheckDataSets(unittest.TestCase):
         link2 = "http://ws307.math.auth.gr/rudolf/public/api/3/cubes/global/aggregate?drilldown=global__administrativeClassification__854d0.notation%7Cglobal__administrativeClassification__854d0.prefLabel&order=global__amount__0397f.sum:desc&pagesize=30"
         link3 = "http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-kilkis-expenditure-2015__74025/aggregate?drilldown=administrativeClassification.prefLabel%7CeconomicClassification.prefLabel%7CbudgetPhase.prefLabel&aggregates=amount.sum"
 
-        result = preprocessing_dm.construct_input_csv(link3)
+        link4 = "http://wenxion.net/OBEU/sparql0"
+        result = preprocessing_dm.construct_input_csv(link4)
         assert '/Input_' in result
 
 
