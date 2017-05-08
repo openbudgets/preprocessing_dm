@@ -86,45 +86,27 @@
   "outlierDetection_FRQ": {},
   "RuleMining":{
     "algorithm": {
-      "title": "Rule Mining",
-      "name": "do_outlier_detection_lof",
+      "title": "Identifying possible rules in a dataset",
+      "name": "do_rule_mining",
       "instance": "outlier_dm.detect_outliers_subpopulation_lattice",
-      "method": "POST",
-      "endpoint": [
-        "DAMUrl",
-        "/outlier_detection/LOF",
-        "sample"
-      ],
-      "prompt": "select one or more files, to detect most isolated items (based on density)"
+      "method": ["GET","POST"],
+      "prompt": "(1) select one file, (2) select this method"
     },
     "input": {
-      "description": "",
-      "raw_data": {
-        "cardinality": "1",
-        "type": "turtle",
-        "name": "filename",
-        "title": "Select one or more files to identify anormal values",
-        "guess": false,
-        "required": true,
-        "note": "all input filenames are concatenated by '+', starting with '+', e.g., '+budget-kilkis-expenditure-2012'or '+budget-kilkis-expenditure-2012+budget-kilkis-expenditure-2013' "
-      },
-      "output_file": {
-        "cardinality": "1",
-        "type": "string",
-        "name": "output",
-        "title": "Output File Name",
-        "guess": false,
-        "default": "Result",
-        "required": false
-      },
-      "full_output": {
-        "cardinality": "1",
-        "type": "string",
-        "name": "full_output",
-        "title": "Whether full output",
-        "guess": false,
-        "default": "partial",
-        "required": false
-      }
+      "VAR": "BABBAGE_FACT_URI",
+      "TARGET_COLUMN": "user must tell DAM the consequent column in the input table (used as the consequent part in rules)",
+      "endpoint": "http://dam-obeu.iais.fraunhofer.de/rule_mining"
+    },
+    "output": {
+      "endpoint":"http://dam-obeu.iais.fraunhofer.de/results/<job-id>",
+      "type": "json"
+    },
+    "example": {
+      "input_file": {"BABBAGE_FACT_URI" : "http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-kilkis-expenditure-2015__74025/aggregate?drilldown=administrativeClassification.prefLabel%7CeconomicClassification.prefLabel%7CbudgetPhase.prefLabel&aggregates=amount.sum"},
+      "indigo2DAM":  "curl -H \"Content-Type:application/json; charset=UTF-8\"  --requst POST 'http://dam-obeu.iais.fraunhofer.de/rule_mining?BABBAGE_FACT_URI=http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-kilkis-expenditure-2015__74025/aggregate?drilldown=administrativeClassification.prefLabel%7CeconomicClassification.prefLabel%7CbudgetPhase.prefLabel&aggregates=amount.sum' ",
+      "responseFromDam": "{job-id: 3ffecc31-e14a-4289-aee7-833f3fdebc28}",
+      "indigoGetResult": "curl -H \"Host:sub.domain.com\" http://dam-obeu.iais.fraunhofer.de/results/3ffecc31-e14a-4289-aee7-833f3fdebc28",
+      "Result0": {"status": "Wait!" }
+    }
   }
 }
