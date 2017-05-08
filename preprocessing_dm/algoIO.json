@@ -55,21 +55,50 @@
       "type": "TABLE"
     }
   },
+  "Statistics": {},
+
   "outlierDetection_LOF": {
     "algorithm": {
       "title": "outlier Detection based on Local Outlier Factor",
+      "name": "do_outlier_detection_lof",
+      "instance": "outlier_dm.detect_outliers_subpopulation_lattice",
+      "method": ["GET","POST"],
+      "prompt": "(1) select one file, (2) select this method"
+    },
+    "input": {
+      "VAR": "BABBAGE_FACT_URI",
+      "description": "if the endpoint is '<DAMUrl>/outlier_detection/LOF/sample', no input is needed. The server uses '<DAMUrl>/Data/Kilkis_neu.csv' as input csv file. Following input is for '<DAMUrl>/outlier_detection/LOF/real'",
+      "endpoint": "http://dam-obeu.iais.fraunhofer.de/outlier_detection/LOF/sample"
+    },
+    "output": {
+      "endpoint":"http://dam-obeu.iais.fraunhofer.de/results/<job-id>",
+      "type": "json"
+    },
+    "example": {
+      "input_file": {"BABBAGE_FACT_URI" : "http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-kilkis-expenditure-2015__74025/aggregate?drilldown=administrativeClassification.prefLabel%7CeconomicClassification.prefLabel%7CbudgetPhase.prefLabel&aggregates=amount.sum"},
+      "indigo2DAM": "curl -H \"Host:sub.domain.com\" http://dam-obeu.iais.fraunhofer.de/outlier_detection/LOF/sample?BABBAGE_FACT_URI=http://ws307.math.auth.gr/rudolf/public/api/3/cubes/budget-kilkis-expenditure-2015__74025/aggregate?drilldown=administrativeClassification.prefLabel%7CeconomicClassification.prefLabel%7CbudgetPhase.prefLabel&aggregates=amount.sum",
+      "responseFromDam": "{job-id: 3ffecc31-e14a-4289-aee7-833f3fdebc28}",
+      "indigoGetResult": "curl -H \"Host:sub.domain.com\" http://dam-obeu.iais.fraunhofer.de/results/3ffecc31-e14a-4289-aee7-833f3fdebc28",
+      "Result0": {"status": "Wait!" }
+    }
+  },
+
+  "outlierDetection_FRQ": {},
+  "RuleMining":{
+    "algorithm": {
+      "title": "Rule Mining",
       "name": "do_outlier_detection_lof",
       "instance": "outlier_dm.detect_outliers_subpopulation_lattice",
       "method": "POST",
       "endpoint": [
         "DAMUrl",
         "/outlier_detection/LOF",
-        "sample|real"
+        "sample"
       ],
       "prompt": "select one or more files, to detect most isolated items (based on density)"
     },
     "input": {
-      "description": "if the endpoint is '<DAMUrl>/outlier_detection/LOF/sample', no input is needed. The server uses '<DAMUrl>/Data/Kilkis_neu.csv' as input csv file. Following input is for '<DAMUrl>/outlier_detection/LOF/real'",
+      "description": "",
       "raw_data": {
         "cardinality": "1",
         "type": "turtle",
@@ -97,13 +126,5 @@
         "default": "partial",
         "required": false
       }
-    },
-    "output": {
-      "name": "output",
-      "instance": "json_outout with 'filename' as the key",
-      "cardinality": "1",
-      "type": "CSV",
-      "location": "<DAMUrl>/static/output"
-    }
   }
 }
