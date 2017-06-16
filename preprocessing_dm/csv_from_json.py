@@ -30,6 +30,13 @@ def construct_input_csv(url, csvFile='Input.csv'):
             dataLst = jsonContent['data']
             record = jsonContent['data'][0]
 
+        #this code is only for test, comment out when deploy
+        if ('year' not in attributes):
+            dataLst = test_data_with_year(dataLst)
+            attributes.insert(0,'year')
+            record["year"] = 2017
+        # this code is only for test,comment out when deploy
+
         amountKey = ""
         for key in record.keys():
             if key not in attributes and not key.startswith('_'):
@@ -100,6 +107,13 @@ def construct_uep_input_csv(url, csvFile='Input.csv'):
             dataLst = jsonContent['data']
             record = jsonContent['data'][0]
 
+        # this code is only for test, comment out when deploy
+        if ('year' not in attributes):
+            dataLst = test_data_with_year(dataLst)
+            attributes.insert(0, 'year')
+            record["year"] = 2017
+        # this code is only for test,comment out when deploy
+
         amountKey = ""
         for key in record.keys():
             if key not in attributes and not key.startswith('_'):
@@ -142,3 +156,10 @@ def construct_uep_input_csv(url, csvFile='Input.csv'):
         csvDf.to_csv(csvFileName, index=False, header=False)
 
         return os.path.abspath(csvFileName)
+
+def test_data_with_year(input):
+    import random
+    for row in input:
+        year = random.randint(2014, 2017)
+        row["year"] = year
+    return input
