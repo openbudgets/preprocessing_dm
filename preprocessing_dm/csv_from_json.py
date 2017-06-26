@@ -31,10 +31,24 @@ def construct_input_csv(url, csvFile='Input.csv'):
             record = jsonContent['data'][0]
 
         #this code is only for test, comment out when deploy
+        '''
+        Flag = False
+        for att in attributes:
+            if("fiscalPeriod" in att):
+                Flag = True
+                break
+        if(Flag==False):
+            dataLst = test_data_with_year(dataLst)
+            attributes.insert(0, 'year')
+            record["year"] = 2017
+
+
+                print("test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         if ('year' not in attributes):
             dataLst = test_data_with_year(dataLst)
             attributes.insert(0,'year')
             record["year"] = 2017
+        '''
         # this code is only for test,comment out when deploy
 
         amountKey = ""
@@ -108,10 +122,24 @@ def construct_uep_input_csv(url, csvFile='Input.csv'):
             record = jsonContent['data'][0]
 
         # this code is only for test, comment out when deploy
-        if ('year' not in attributes):
+        '''
+        Flag = False
+        for att in attributes:
+            if("fiscalPeriod" in att):
+                Flag = True
+                break
+        if(Flag==False):
             dataLst = test_data_with_year(dataLst)
             attributes.insert(0, 'year')
             record["year"] = 2017
+
+
+                print("test~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        if ('year' not in attributes):
+            dataLst = test_data_with_year(dataLst)
+            attributes.insert(0,'year')
+            record["year"] = 2017
+        '''
         # this code is only for test,comment out when deploy
 
         amountKey = ""
