@@ -41,6 +41,7 @@ def do_sparql_query(urlContent, output_format='json'):
 
 
 def down_content(url=None):
+    url = url.replace(" ", "%20")
     print('url', url)
     urlContent = down_file(url)
     urlContent = str(urlContent.decode("utf-8"))
