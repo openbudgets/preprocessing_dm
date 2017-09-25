@@ -67,6 +67,7 @@ def construct_input_csv(url, csvFile='Input.csv'):
         for record in dataLst:
             vLst = []
             for att in attributes:
+                att=att.replace(',', ' ')
                 vLst.append(record.get(att, 'NULL'))
             df.append(vLst)
 
