@@ -2,6 +2,8 @@
 import pandas as pd
 import os
 from .util import down_content, id_generator
+import json
+import ast
 
 """
  year , adminClass , economicClass , budgetPhase , sum ,
@@ -195,3 +197,13 @@ def test_data_with_year(input):
         year = random.randint(2014, 2017)
         row["year"] = year
     return input
+
+def cached_file(filename):
+    json_url = os.path.join(os.getenv("CACHE_FILE_PATH"), filename)
+
+    data = json.load(open(json_url))
+    json_data = json.dumps(data)
+
+
+    print(data)
+    return json_data
