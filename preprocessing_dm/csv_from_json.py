@@ -162,6 +162,4 @@ def cached_file(filename):
     data = json.load(open(json_url))
     json_data = json.dumps(data)
 
-
-    print(data)
     return json_data
